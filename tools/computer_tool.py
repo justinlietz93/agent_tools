@@ -134,52 +134,14 @@ class ComputerTool(Tool):
         }
 
     def __init__(self):
-        """Initialize the tool with screen dimensions and window info."""
+        """Initialize the tool with screen dimensions."""
         super().__init__()
         self.screen_width, self.screen_height = pyautogui.size()
-        self.cursor_window = None
-        self.find_cursor_window()
-
-    def find_cursor_window(self):
-        """Find and store the Cursor IDE window handle."""
-        def callback(hwnd, _):
-            if win32gui.IsWindowVisible(hwnd):
-                title = win32gui.GetWindowText(hwnd)
-                if "Cursor" in title:
-                    self.cursor_window = hwnd
-                    return False
-            return True
-        
-        win32gui.EnumWindows(callback, None)
-
-    def _is_safe_coordinate(self, x: int, y: int) -> bool:
-        """Check if coordinates are safe to click (not in Cursor window area)."""
-        if not self.cursor_window:
-            return True
-            
-        try:
-            left, top, right, bottom = win32gui.GetWindowRect(self.cursor_window)
-            # Add padding around window
-            left -= 10
-            top -= 10
-            right += 10
-            bottom += 10
-            
-            return not (left <= x <= right and top <= y <= bottom)
-        except:
-            return True
 
     def _validate_coordinates(self, x: int, y: int) -> Tuple[int, int]:
-        """Validate and adjust coordinates to be within screen bounds and away from Cursor."""
+        """Validate and adjust coordinates to be within screen bounds."""
         x = max(0, min(x, self.screen_width - 1))
         y = max(0, min(y, self.screen_height - 1))
-        
-        # If coordinates are in Cursor window, offset them
-        if not self._is_safe_coordinate(x, y):
-            # Move to bottom right of screen
-            x = self.screen_width - 100
-            y = self.screen_height - 100
-            
         return x, y
 
     def _take_screenshot(self) -> str:
@@ -498,15 +460,6 @@ class ComputerTool(Tool):
             else:  # Click actions
                 if coordinate:
                     x, y = self._validate_coordinates(coordinate[0], coordinate[1])
-                    if not self._is_safe_coordinate(x, y):
-                        return {
-                            "type": "tool_result",
-                            "tool_use_id": tool_use_id,
-                            "content": {
-                                "error": "Cannot click in Cursor IDE window area",
-                                "action": action.value
-                            }
-                        }
                     pyautogui.moveTo(x, y, duration=0.5)
 
                 click_params = {
