@@ -1,0 +1,7 @@
+psutil>=5.9.0
+anthropic>=0.45.0
+pytest>=8.3.4
+requests>=2.32.3
+python-dotenv>=1.0.1
+beautifulsoup4>=4.12.3
+pyautogui>=0.9.54 
