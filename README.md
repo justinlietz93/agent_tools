@@ -50,9 +50,9 @@ Your tool's `run()` method must return a dictionary with this structure:
 ```
 
 2. Tool Schema Requirements
-- All parameters must have clear descriptions
+- All input_schema must have clear descriptions
 - Parameter types must be explicitly defined
-- Required parameters must be listed
+- Required input_schema must be listed
 
 Example of a properly formatted tool:
 ```python
@@ -165,7 +165,7 @@ This is within safe screen boundaries and will use a smooth movement.
 Tool Call:
 {
     "tool": "computer",
-    "parameters": {
+    "input_schema": {
         "action": "mouse_move",
         "coordinate": [100, 100]
     }

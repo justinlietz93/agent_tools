@@ -20,7 +20,7 @@ class ConcreteWebBrowserTool(WebBrowserTool):
     
     @property
     def input_schema(self) -> Dict[str, Any]:
-        return self.parameters
+        return self.input_schema
 
 @pytest.fixture
 def web_browser():

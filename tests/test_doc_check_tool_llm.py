@@ -63,9 +63,9 @@ def test_tool_definition(doc_check_tool):
     definition = doc_check_tool.get_tool_definition()
     assert definition["name"] == "documentation_check"
     assert "description" in definition
-    assert "parameters" in definition
-    assert "check_type" in definition["parameters"]["properties"]
-    assert "path" in definition["parameters"]["properties"]
+    assert "input_schema" in definition
+    assert "check_type" in definition["input_schema"]["properties"]
+    assert "path" in definition["input_schema"]["properties"]
 
 @pytest.mark.unit
 def test_basic_functionality(doc_check_tool):

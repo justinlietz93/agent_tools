@@ -27,7 +27,7 @@ class WebSearchTool(Tool):
         return "Search the web and extract relevant information from web pages."
 
     @property
-    def parameters(self) -> Dict[str, Any]:
+    def input_schema(self) -> Dict[str, Any]:
         return {
             "type": "object",
             "properties": {

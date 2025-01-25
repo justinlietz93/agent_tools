@@ -2,9 +2,11 @@
 
 import os
 import subprocess
+import sys
 from typing import Any, Dict, List, Optional, TypedDict
 
 from .tool_base import Tool
+from .config import Config
 
 class PackageManagerOptions(TypedDict):
     """Options for package manager operations."""
@@ -55,7 +57,13 @@ class PackageManagerTool(Tool):
 
     def _get_pip_cmd(self) -> str:
         """Get the appropriate pip command based on environment."""
+        if Config.PACKAGE_MANAGER_CONFIG["pip_command"]:
+            return Config.PACKAGE_MANAGER_CONFIG["pip_command"]
+        
         venv = self.options.get('virtual_env') or os.environ.get('VIRTUAL_ENV')
+        if Config.PACKAGE_MANAGER_CONFIG["use_module_pip"]:
+            return sys.executable  # Will be used with -m pip
+        
         if venv:
             if os.name == 'nt':  # Windows
                 return os.path.join(venv, 'Scripts', 'pip.exe')
@@ -65,7 +73,11 @@ class PackageManagerTool(Tool):
     def _run_pip(self, *args: str) -> Dict[str, Any]:
         """Run pip command and return result."""
         try:
-            cmd = [self.pip_cmd] + list(args)
+            if Config.PACKAGE_MANAGER_CONFIG["use_module_pip"]:
+                cmd = [sys.executable, "-m", "pip"] + list(args)
+            else:
+                cmd = [self.pip_cmd] + list(args)
+            
             if index_url := self.options.get('index_url'):
                 cmd.extend(['--index-url', index_url])
             if extra_index := self.options.get('extra_index_url'):
@@ -79,17 +91,25 @@ class PackageManagerTool(Tool):
             if self.options.get('pre'):
                 cmd.append('--pre')
 
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                check=True
-            )
-            return {"content": result.stdout}
-        except subprocess.CalledProcessError as e:
-            return {"content": f"Error: Pip command failed: {e.stderr}"}
+            result = self._try_run_command(cmd)
+            if "Error" not in result["content"]:
+                return result
+            
+            # If failed, try python -m pip
+            cmd = [sys.executable, "-m", "pip"] + list(args)
+            return self._try_run_command(cmd)
         except Exception as e:
             return {"content": f"Error: Error running pip: {str(e)}"}
+
+    def _try_run_command(self, cmd: List[str]) -> Dict[str, Any]:
+        """Try running a command and return result."""
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return {"content": result.stdout}
 
     def run(self, input: Dict[str, Any]) -> Dict[str, Any]:
         """Execute package management action."""

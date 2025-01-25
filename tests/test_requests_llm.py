@@ -17,7 +17,7 @@ class ConcreteRequestsTool(RequestsTool):
     
     @property
     def input_schema(self) -> Dict[str, Any]:
-        return self.parameters
+        return self.input_schema
 
 # Test fixtures
 @pytest.fixture

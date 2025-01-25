@@ -20,7 +20,7 @@ from tests.conftest import get_claude_response
 # Unit Tests (Mock LLM and Mock Tool Calls)
 @pytest.mark.unit
 def test_tool_definition():
-    """Verify PackageManagerTool definition format and parameters"""
+    """Verify PackageManagerTool definition format and input_schema"""
     tool = PackageManagerTool()
     assert tool.name == "package_manager"
     assert "pip" in tool.description.lower()

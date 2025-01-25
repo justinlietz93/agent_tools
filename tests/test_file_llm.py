@@ -31,7 +31,7 @@ def format_message(*parts):
 # Unit Tests (Mock LLM and Mock Tool Calls)
 @pytest.mark.unit
 def test_tool_definition():
-    """Verify FileTool definition format and parameters"""
+    """Verify FileTool definition format and input_schema"""
     tool = FileTool()
     assert tool.name == "file"
     assert "read" in tool.description.lower()

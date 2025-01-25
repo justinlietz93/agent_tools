@@ -14,7 +14,7 @@ class YourTool(Tool):
     name = "your_tool"  # Unique identifier for your tool
     description = "A clear description of what your tool does"
     
-    # Define the expected input parameters
+    # Define the expected input input_schema
     input_schema = {
         "type": "object",
         "properties": {
@@ -32,7 +32,7 @@ class YourTool(Tool):
     }
 
     def run(self, params: Dict[str, Any]) -> Dict[str, Any]:
-        """Execute the tool with given parameters."""
+        """Execute the tool with given input_schema."""
         try:
             # Your implementation here
             result = self._perform_action(params)
@@ -61,14 +61,14 @@ class YourTool(Tool):
 
 - `name`: Unique identifier for your tool
 - `description`: Clear, detailed description of what your tool does
-- `input_schema`: JSONSchema defining expected parameters
+- `input_schema`: JSONSchema defining expected input_schema
 
 ### 2. Input Schema
 
 Your schema must define:
 - Parameter names and types
 - Clear descriptions for each parameter
-- Required vs optional parameters
+- Required vs optional input_schema
 - Any constraints (enums, ranges, etc.)
 
 Example schema:
@@ -101,7 +101,7 @@ input_schema = {
 ### 3. Run Method
 
 The `run` method must:
-- Accept a dictionary of parameters
+- Accept a dictionary of input_schema
 - Validate inputs against schema
 - Return results in the standard format
 - Handle errors gracefully
@@ -126,7 +126,7 @@ All tools must return responses in this format:
 1. **Input Validation**
 ```python
 def run(self, params):
-    # Validate required parameters
+    # Validate required input_schema
     if "action" not in params:
         return {
             "type": "tool_result",

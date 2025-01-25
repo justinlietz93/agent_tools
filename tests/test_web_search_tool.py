@@ -51,7 +51,7 @@ class ConcreteWebSearchTool(WebSearchTool):
     
     @property
     def input_schema(self) -> Dict[str, Any]:
-        return self.parameters
+        return self.input_schema
 
 @pytest.fixture
 def web_search_tool():
@@ -390,7 +390,7 @@ def test_real_claude_with_real_websites(web_search_tool):
     # Test searching Anthropic's documentation
     system_prompt = """You have access to a web search tool. Use it to find specific information from websites."""
     
-    user_message = "What are the latest Claude API docs about tool use? Focus on the required parameters for tool definitions."
+    user_message = "What are the latest Claude API docs about tool use? Focus on the required input_schema for tool definitions."
     print("\n=== TEST 1: Searching Anthropic Docs ===")
     print(f"User: {user_message}")
     

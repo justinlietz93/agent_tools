@@ -11,6 +11,7 @@ import tempfile
 from typing import AsyncGenerator, Dict, Any, List
 from anthropic import Anthropic
 from dotenv import load_dotenv
+import json
 
 # Load environment variables
 load_dotenv()
@@ -66,7 +67,7 @@ def get_tool_calls(response) -> List[Dict[str, Any]]:
         response: Claude's response object
         
     Returns:
-        List of tool call dictionaries with name and parameters
+        List of tool call dictionaries with name and input_schema
     """
     tool_calls = []
     
@@ -75,7 +76,7 @@ def get_tool_calls(response) -> List[Dict[str, Any]]:
             for tool_call in content.tool_calls:
                 tool_calls.append({
                     "name": tool_call.name,
-                    "parameters": tool_call.parameters
+                    "input_schema": tool_call.input_schema
                 })
     
     return tool_calls
@@ -85,13 +86,13 @@ def extract_tool_calls(text: str) -> List[Dict[str, Any]]:
     
     This is a backup method for when we can't access the structured response.
     It looks for tool calls in the format:
-    <tool>name: parameters</tool>
+    <tool>name: input_schema</tool>
     
     Args:
         text: Response text containing tool calls
         
     Returns:
-        List of tool call dictionaries with name and parameters
+        List of tool call dictionaries with name and input_schema
     """
     tool_calls = []
     
@@ -120,21 +121,13 @@ def extract_tool_calls(text: str) -> List[Dict[str, Any]]:
     return tool_calls
 
 def parse_tool_call(name: str, params_text: str) -> Dict[str, Any]:
-    """Parse a tool call from name and parameters text.
-    
-    Args:
-        name: Tool name
-        params_text: JSON string of parameters
-        
-    Returns:
-        Dictionary with name and parameters
-    """
+    """Parse a tool call from name and input_schema text."""
     try:
         params = json.loads(params_text)
     except json.JSONDecodeError:
-        params = {"error": f"Failed to parse parameters: {params_text}"}
+        params = {"error": f"Failed to parse input_schema: {params_text}"}
         
     return {
         "name": name,
-        "parameters": params
+        "input_schema": params  # Changed from input_schema
     } 

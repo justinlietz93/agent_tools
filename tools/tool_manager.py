@@ -94,13 +94,13 @@ class ToolManager:
         
         Returns:
             List of tool information dictionaries containing name,
-            description and parameters for each tool
+            description and input_schema for each tool
         """
         return [
             {
                 "name": tool.name,
                 "description": tool.description,
-                "parameters": tool.parameters
+                "input_schema": tool.input_schema
             }
             for tool in self.tools.values()
         ]

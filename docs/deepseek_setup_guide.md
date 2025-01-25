@@ -53,7 +53,7 @@ The response includes three parts:
     "reasoning": "I'll use the computer tool to move the mouse...",
     "tool_call": {
         "tool": "computer",
-        "parameters": {
+        "input_schema": {
             "action": "mouse_move",
             "coordinate": [100, 100]
         }
@@ -151,7 +151,7 @@ Common issues and solutions:
    - Check schema format
 
 3. **Execution Errors**
-   - Look for missing parameters
+   - Look for missing input_schema
    - Check parameter types match schema
 
 ## Additional Resources

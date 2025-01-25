@@ -7,7 +7,7 @@ Based on: https://docs.anthropic.com/claude/docs/tool-use
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional, TypedDict, List, Literal
 
-class ToolParameters(TypedDict):
+class ToolInput_schema(TypedDict):
     type: str
     function: Dict[str, Any]
 
@@ -43,17 +43,17 @@ class Tool(ABC):
     @abstractmethod
     def input_schema(self) -> Dict[str, Any]:
         """
-        JSONSchema object defining accepted parameters.
+        JSONSchema object defining accepted input_schema.
         Must include:
         - type: "object"
         - properties: Parameter definitions
-        - required: List of required parameters
+        - required: List of required input_schema
         """
         pass
 
     @abstractmethod
     def run(self, input: Dict[str, Any]) -> Dict[str, Any]:
-        """Execute the tool with the given input parameters."""
+        """Execute the tool with the given input input_schema."""
         pass
 
     def get_tool_definition(self) -> Dict[str, Any]:

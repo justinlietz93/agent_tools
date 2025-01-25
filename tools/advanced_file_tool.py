@@ -33,7 +33,7 @@ class AdvancedFileTool(Tool):
         )
 
     @property
-    def parameters(self) -> Dict[str, Any]:
+    def input_schema(self) -> Dict[str, Any]:
         return {
             "type": "object",
             "properties": {
@@ -88,7 +88,7 @@ class AdvancedFileTool(Tool):
         Execute the requested file or directory operation.
         
         Args:
-            input: Dictionary containing operation-specific parameters:
+            input: Dictionary containing operation-specific input_schema:
                 operation: The operation to perform
                 path: Target file or directory path
                 content: Content to write (for write/append/edit operations)
@@ -130,7 +130,7 @@ class AdvancedFileTool(Tool):
                 if not src or not dest:
                     return {
                         "type": "tool_response",
-                        "content": "Error: 'move' operation requires both 'src' and 'dest' parameters"
+                        "content": "Error: 'move' operation requires both 'src' and 'dest' input_schema"
                     }
                 result = self._move(src, dest)
             else:

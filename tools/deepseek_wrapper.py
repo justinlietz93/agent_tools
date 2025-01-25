@@ -40,7 +40,7 @@ class DeepseekToolWrapper:
         for name, info in self.tools.items():
             tools_desc += f"\nTool: {name}\n"
             tools_desc += f"Description: {info['description']}\n"
-            tools_desc += f"Parameters:\n{info['schema']}\n"
+            tools_desc += f"Input_schema:\n{info['schema']}\n"
             
         return f"""You are an AI assistant with access to the following tools:
 {tools_desc}
@@ -49,7 +49,7 @@ To use a tool, first explain your reasoning using Chain of Thought, then respond
 TOOL_CALL:
 {{
     "tool": "tool_name",
-    "parameters": {{
+    "input_schema": {{
         "param1": "value1",
         "param2": "value2"
     }}
@@ -57,7 +57,7 @@ TOOL_CALL:
 
 Make sure to:
 1. Use valid JSON format
-2. Include all required parameters
+2. Include all required input_schema
 3. Use correct parameter types
 4. Only use tools that are listed above"""
 
@@ -97,7 +97,7 @@ Make sure to:
                 return f"Reasoning:\n{reasoning}\n\nError: Tool '{tool_call['tool']}' not found."
                 
             # Execute tool
-            result = self.tools[tool_call["tool"]]["tool"].run(tool_call["parameters"])
+            result = self.tools[tool_call["tool"]]["tool"].run(tool_call["input_schema"])
             
             return f"Reasoning:\n{reasoning}\n\nTool Call:\n{json.dumps(tool_call, indent=2)}\n\nResult:\n{result}"
             

@@ -83,7 +83,7 @@ def test_claude_file_operations(test_dir, file_tool, claude_client):
         "- read: Read entire file content (requires path)\n"
         "- read_lines: Read specific lines (requires path, start_line, and end_line)\n"
         "- edit_lines: Edit specific lines (requires path, start_line, end_line, and content)\n\n"
-        "Always use the exact operation name and provide all required parameters.\n"
+        "Always use the exact operation name and provide all required input_schema.\n"
         "When given multiple steps, you must complete ALL steps in sequence.\n\n"
         "EXAMPLE OF REQUIRED SEQUENCE:\n"
         "When asked to modify lines 2-3 in test.txt, you MUST make these TWO tool calls:\n\n"
@@ -203,7 +203,7 @@ def test_claude_error_handling(test_dir, file_tool, claude_client):
         assert result["type"] == "tool_response"
         assert "Error" in result["content"]
     
-    # Have Claude handle missing parameters
+    # Have Claude handle missing input_schema
     user_message = "Please try to move a file without specifying the destination."
     
     response = get_claude_response(claude_client, system_prompt, user_message, tools)

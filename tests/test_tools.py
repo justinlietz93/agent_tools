@@ -66,7 +66,7 @@ def test_tool_base_interface():
     # Abstract methods should be defined
     assert hasattr(Tool, 'name')
     assert hasattr(Tool, 'description') 
-    assert hasattr(Tool, 'parameters')
+    assert hasattr(Tool, 'input_schema')
     assert hasattr(Tool, 'run')
     
     # Helper methods should exist

@@ -31,6 +31,12 @@ class Config:
     WEB_BROWSER_TIMEOUT: int = int(os.getenv('WEB_BROWSER_TIMEOUT', '30'))
     DEFAULT_SEARCH_RESULTS: int = int(os.getenv('DEFAULT_SEARCH_RESULTS', '10'))
     
+    # Package manager settings
+    PACKAGE_MANAGER_CONFIG = {
+        "use_module_pip": True,  # Default to python -m pip for better venv support
+        "pip_command": None,     # Custom pip command if needed
+    }
+    
     def __init__(self):
         """Initialize configuration."""
         if not self.DEEPSEEK_API_KEY:

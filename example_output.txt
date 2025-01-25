@@ -18,16 +18,16 @@ Okay, so the user wants to press the Windows key. Let me think about how to do t
 
 First, looking at the available actions under the "computer" tool, the keyboard input section mentions using the "key" action for key combinations. The example given is "ctrl+c". The Windows key is usually represented as "win" or "super" in some systems, but according to the tool's documentation, I should use the correct key name. Since the example uses "ctrl", it's likely that "win" is the right modifier here.
 
-So, to press the Windows key alone, the key combination would just be "win". Therefore, the action should be "key" and the text parameter should be "win". There's no need for coordinates or other parameters here. Let me check if there are any required parameters for the "key" action. The parameters section says the "text" is required, which we have. No other parameters are needed for this action.
+So, to press the Windows key alone, the key combination would just be "win". Therefore, the action should be "key" and the text parameter should be "win". There's no need for coordinates or other input_schema here. Let me check if there are any required input_schema for the "key" action. The input_schema section says the "text" is required, which we have. No other input_schema are needed for this action.
 
-I need to make sure the JSON format is correct. The tool name is "computer", and the parameters should include "action" as "key" and "text" as "win". Let me structure that properly without any syntax errors. Also, ensure that the JSON keys are in quotes and the values are correctly formatted.
+I need to make sure the JSON format is correct. The tool name is "computer", and the input_schema should include "action" as "key" and "text" as "win". Let me structure that properly without any syntax errors. Also, ensure that the JSON keys are in quotes and the values are correctly formatted.
 
-Yep, that should do it. The TOOL_CALL section should have the tool name and parameters with the correct key-value pairs. Let me double-check the example provided in the keyboard input section. The example for "key" is {"action": "key", "text": "ctrl+c"}, so replacing "ctrl+c" with "win" makes sense here. No typos, correct parameter names. Alright, that's the right approach.
+Yep, that should do it. The TOOL_CALL section should have the tool name and input_schema with the correct key-value pairs. Let me double-check the example provided in the keyboard input section. The example for "key" is {"action": "key", "text": "ctrl+c"}, so replacing "ctrl+c" with "win" makes sense here. No typos, correct parameter names. Alright, that's the right approach.
 
 Tool Call:
 {
   "tool": "computer",
-  "parameters": {
+  "input_schema": {
     "action": "key",
     "text": "win"
   }
@@ -61,7 +61,7 @@ So the most straightforward interpretation is that the user wants the AI to simu
 Tool Call:
 {
   "tool": "computer",
-  "parameters": {
+  "input_schema": {
     "action": "type",
     "text": "notepad"
   }
@@ -140,7 +140,7 @@ First tool call: pressing the Win key.
 TOOL_CALL:
 {
     "tool": "computer",
-    "parameters": {
+    "input_schema": {
         "action": "key",
         "text": "win"
     }
@@ -151,7 +151,7 @@ Second: type "notepad".
 TOOL_CALL:
 {
     "tool": "computer",
-    "parameters": {
+    "input_schema": {
         "action": "type",
         "text": "notepad"
     }
@@ -162,7 +162,7 @@ Third: press Enter.
 TOOL_CALL:
 {
     "tool": "computer",
-    "parameters": {
+    "input_schema": {
         "action": "key",
         "text": "enter"
     }
@@ -173,7 +173,7 @@ Fourth: set focus on Notepad window.
 TOOL_CALL:
 {
     "tool": "computer",
-    "parameters": {
+    "input_schema": {
         "action": "set_window_focus",
         "window_title": "Notepad"
     }
@@ -184,7 +184,7 @@ Fifth: type "Hello, World!".
 TOOL_CALL:
 {
     "tool": "computer",
-    "parameters": {
+    "input_schema": {
         "action": "type",
         "text": "Hello, World!"
     }
@@ -227,11 +227,11 @@ So revised steps:
 
 So tool calls:
 
-1. {"tool": "computer", "parameters": {"action": "key", "text": "win"}}
-2. {"tool": "computer", "parameters": {"action": "type", "text": "notepad"}}
-3. {"tool": "computer", "parameters": {"action": "key", "text": "enter"}}
-4. {"tool": "computer", "parameters": {"action": "find_window", "title": "Notepad"}}
-5. {"tool": "computer", "parameters": {"action": "set_window_focus", "window_title": "[exact title from find_window]"}}
+1. {"tool": "computer", "input_schema": {"action": "key", "text": "win"}}
+2. {"tool": "computer", "input_schema": {"action": "type", "text": "notepad"}}
+3. {"tool": "computer", "input_schema": {"action": "key", "text": "enter"}}
+4. {"tool": "computer", "input_schema": {"action": "find_window", "title": "Notepad"}}
+5. {"tool": "computer", "input_schema": {"action": "set_window_focus", "window_title": "[exact title from find_window]"}}
 
 But wait, the fourth tool call is "find_window", which would return the window information, but since the assistant can't process the output (as per the current setup), perhaps the assistant needs to assume that the window title is "Notepad" and proceed. Alternatively, the assistant might need to chain the tool calls based on previous outputs, but in this scenario, the assistant is supposed to generate the tool calls without knowing the outputs. Therefore, it's a limitation.
 
@@ -250,7 +250,7 @@ Thus, the tool calls as before.
 Tool Call:
 {
   "tool": "computer",
-  "parameters": {
+  "input_schema": {
     "action": "key",
     "text": "win"
   }
@@ -265,12 +265,12 @@ Result:
 TEST: Step 4: Type Hello World
 ================================================================================
 Reasoning:
-Okay, let's see. The user wants me to type "Hello World". The available tools include the keyboard input actions. So, I need to use the "type" action under the keyboard input section. The parameters require the action to be "type" and the text to be "Hello World". I should make sure the JSON structure is correct. Let me check the example they provided. The example for typing is {"action": "type", "text": "Hello World"}, which is under the "keyboard Input" tool. So the tool name here is "computer", right? Wait, the tool is called "computer", and the parameters include action and text. So the tool call should have "tool": "computer", and parameters with action "type" and text "Hello World". Let me verify. Yes, the parameters for the keyboard input require action and text. So the correct TOOL_CALL should be structured with the computer tool, action type, and text "Hello World". No coordinates needed here since it's just typing. Alright, that should do it.
+Okay, let's see. The user wants me to type "Hello World". The available tools include the keyboard input actions. So, I need to use the "type" action under the keyboard input section. The input_schema require the action to be "type" and the text to be "Hello World". I should make sure the JSON structure is correct. Let me check the example they provided. The example for typing is {"action": "type", "text": "Hello World"}, which is under the "keyboard Input" tool. So the tool name here is "computer", right? Wait, the tool is called "computer", and the input_schema include action and text. So the tool call should have "tool": "computer", and input_schema with action "type" and text "Hello World". Let me verify. Yes, the input_schema for the keyboard input require action and text. So the correct TOOL_CALL should be structured with the computer tool, action type, and text "Hello World". No coordinates needed here since it's just typing. Alright, that should do it.
 
 Tool Call:
 {
   "tool": "computer",
-  "parameters": {
+  "input_schema": {
     "action": "type",
     "text": "Hello World"
   }

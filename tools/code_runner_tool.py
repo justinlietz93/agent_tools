@@ -158,11 +158,11 @@ class CodeRunnerTool(Tool):
     def description(self) -> str:
         return """Executes code files in various programming languages (Python, TypeScript, Go, Rust).
         Supports multi-file projects, package dependencies, and build steps.
-        Required parameters:
+        Required input_schema:
         - files: List of files with paths and contents
         - language: Programming language (python, typescript, go, rust) 
         - main_file: Path to the main file to execute
-        Optional parameters:
+        Optional input_schema:
         - args: Command line arguments
         - env: Environment variables
         - timeout: Maximum execution time in seconds

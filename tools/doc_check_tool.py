@@ -68,7 +68,7 @@ class DocCheckTool(Tool):
         )
 
     @property
-    def parameters(self) -> Dict[str, Any]:
+    def input_schema(self) -> Dict[str, Any]:
         return {
             "type": "object",
             "properties": {
@@ -114,7 +114,7 @@ class DocCheckTool(Tool):
     @property
     def input_schema(self) -> Dict[str, Any]:
         """Get the input schema for the tool."""
-        return self.parameters
+        return self.input_schema
 
     def run(self, input: Dict[str, Any]) -> Dict[str, Any]:
         """
