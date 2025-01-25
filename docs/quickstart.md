@@ -99,6 +99,59 @@ wrapper.execute("Move the current window to the top-left")
 wrapper.execute("Center this window on screen")
 ```
 
+## Advanced Example: AI Code Generation
+
+This example demonstrates Deepseek's powerful reasoning capabilities when generating and running code:
+
+```python
+# Generate a Pomodoro timer application
+result = wrapper.execute(
+    """Create a Python program that implements a Pomodoro timer with:
+    1. GUI using tkinter
+    2. 25-minute work timer
+    3. Desktop notifications
+    4. Progress bar
+    [etc...]"""
+)
+```
+
+### Deepseek's Chain of Thought
+
+When asked to run the generated program, Deepseek shows impressive reasoning:
+
+```
+Reasoning:
+1. First, I need to figure out how to execute the script. Looking at available tools:
+   - 'file' tool: handles file operations
+   - 'computer' tool: controls mouse, keyboard, windows
+
+2. To run a Python script, typically you would:
+   - Open terminal
+   - Type 'python script.py'
+   - Press Enter
+
+3. Analyzing possible approaches:
+   - Could use keyboard shortcuts to open terminal (Win+R, cmd)
+   - Could assume terminal is already open
+   - Need to ensure correct working directory
+
+4. Considering tool capabilities:
+   - 'type' action can input text
+   - 'key' action can send key combinations
+   - Need to handle newlines and Enter key
+
+5. Solution:
+   Use 'type' action with newline to simulate command execution:
+   python examples/pomodoro_timer.py\n
+```
+
+This demonstrates how Deepseek:
+- Analyzes available tools
+- Considers multiple approaches
+- Handles edge cases
+- Makes reasonable assumptions
+- Explains its decision process
+
 ## Troubleshooting
 
 ### Common Issues
