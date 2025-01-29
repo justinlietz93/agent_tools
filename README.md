@@ -221,6 +221,14 @@ pytest -m demo
 4. Ensure all tests pass
 5. Submit a pull request
 
+PLEASE feel free to submit issues or feature requests in the issues section.
+
+## Currently in queue
+- Dynamic LLM web search (natural language prompting the LLM to find anything on the internet)
+- LLM web scraping and data aggregation. (Doc building, research, etc)
+- Add functionality to allow any LLM to pilot the system, including self-hosted
+- Lastly, I have a huge update coming to allow fully autonomous, persistent memory, goal pursuit LLM capabilities with many more tools. The LLM will be capable of building and registering it's own tools at runtime and still be compatible with the previous features. I have been testing this and proven it works, but it is not stable enough to release. Stay tuned
+
 ## License
 
 MIT License
