@@ -29,8 +29,8 @@ DEEPSEEK_API_KEY=your_api_key_here
 Here's a simple example using the computer tool:
 
 ```python
-from tools.deepseek_wrapper import DeepseekToolWrapper
-from tools.computer_tool import ComputerTool
+from src.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.tools.computer_tool import ComputerTool
 
 # Initialize the wrapper
 wrapper = DeepseekToolWrapper()

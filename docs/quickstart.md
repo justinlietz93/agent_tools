@@ -44,8 +44,8 @@ This will demonstrate Deepseek controlling your system by:
 Deepseek Reasoner understands natural language commands and automatically determines the appropriate tool actions. Simply describe what you want to do:
 
 ```python
-from tools.deepseek_wrapper import DeepseekToolWrapper
-from tools.computer_tool import ComputerTool
+from src.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.tools.computer_tool import ComputerTool
 
 # Initialize
 wrapper = DeepseekToolWrapper()

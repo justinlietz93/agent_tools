@@ -5,7 +5,7 @@ Verifies that Claude can properly understand and use the HTTP request tool.
 
 import pytest
 import requests
-from tools.requests_tool import RequestsTool
+from src.tools.requests_tool import RequestsTool
 from typing import Dict, Any
 from anthropic import Anthropic
 import os

@@ -4,7 +4,7 @@ Configuration module for loading environment variables and settings.
 This module handles:
 1. Loading API keys from .env file
 2. Setting default configurations
-3. Validating required settings
+3. Validating required settings (lax; does not force Deepseek key for local/Ollama)
 """
 
 import os
@@ -17,8 +17,20 @@ load_dotenv()
 class Config:
     """Configuration manager for tool settings and API keys."""
     
-    # Required API Keys
+    # OpenAI-compatible endpoints (support DeepSeek, Ollama, custom)
+    OPENAI_API_KEY: str = os.getenv('OPENAI_API_KEY', '')
+    OPENAI_BASE_URL: str = os.getenv('OPENAI_BASE_URL', '')
+    OPENAI_MODEL: str = os.getenv('OPENAI_MODEL', '')
+    
+    # DeepSeek (OpenAI-compatible)
     DEEPSEEK_API_KEY: str = os.getenv('DEEPSEEK_API_KEY', '')
+    DEEPSEEK_BASE_URL: str = os.getenv('DEEPSEEK_BASE_URL', 'https://api.deepseek.com')
+    DEEPSEEK_MODEL: str = os.getenv('DEEPSEEK_MODEL', 'deepseek-reasoner')
+    
+    # Ollama (OpenAI-compatible shim at /v1)
+    OLLAMA_API_KEY: str = os.getenv('OLLAMA_API_KEY', 'ollama')  # placeholder, often unused
+    OLLAMA_BASE_URL: str = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434/v1')
+    OLLAMA_MODEL: str = os.getenv('OLLAMA_MODEL', 'llama3.1')
     
     # Optional API Keys
     ANTHROPIC_API_KEY: str = os.getenv('ANTHROPIC_API_KEY', '')
@@ -37,23 +49,24 @@ class Config:
         "pip_command": None,     # Custom pip command if needed
     }
     
+    # Validation flags
+    REQUIRE_DEEPSEEK_KEY: bool = os.getenv('REQUIRE_DEEPSEEK_KEY', 'false').lower() in ('1', 'true', 'yes')
+
     def __init__(self):
-        """Initialize configuration."""
-        if not self.DEEPSEEK_API_KEY:
-            raise ValueError("DEEPSEEK_API_KEY environment variable must be set")
+        """Initialize configuration without forcing Deepseek API key."""
+        # No hard validation here to allow local/Ollama-first usage
+        pass
     
     @classmethod
     def validate_api_keys(cls) -> None:
         """
-        Validate that required API keys are set.
-        
-        Raises:
-            ValueError: If the required Deepseek API key is missing
+        Optionally validate that required API keys are set.
+        By default, we do NOT require Deepseek key to allow local/Ollama usage.
         """
-        if not cls.DEEPSEEK_API_KEY:
+        if cls.REQUIRE_DEEPSEEK_KEY and not cls.DEEPSEEK_API_KEY:
             raise ValueError(
                 "Missing required API key: DEEPSEEK_API_KEY. "
-                "Please set it in your .env file."
+                "Set REQUIRE_DEEPSEEK_KEY=true to enforce; otherwise it's optional."
             )
     
     @classmethod
@@ -69,5 +82,5 @@ class Config:
         """
         return getattr(cls, key_name, None)
 
-# Validate API keys on module import
-Config.validate_api_keys() 
+# Lax validation on import (no exception by default)
+Config.validate_api_keys()

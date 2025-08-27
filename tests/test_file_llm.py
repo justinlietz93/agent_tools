@@ -14,7 +14,7 @@ import sys
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from tools.file_tool import FileTool
+from src.tools.file_tool import FileTool
 from tests.conftest import get_claude_response, create_test_file
 
 def normalize_path(path):

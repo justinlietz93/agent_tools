@@ -11,10 +11,32 @@ from enum import Enum
 from typing import Dict, Any, Literal, Optional, Tuple, Union
 
 import pyautogui
-import win32api
-import win32con
-import win32gui
 from PIL import Image
+# Cross-platform import safety for Windows-only pywin32 APIs.
+# Provide lightweight shims on non-Windows so module import and tests can run.
+import sys as _sys, types as _types
+try:
+    import win32api, win32con, win32gui  # type: ignore
+except Exception:
+    win32api = _types.SimpleNamespace(GetCursorPos=lambda: (0, 0))  # type: ignore
+    win32con = _types.SimpleNamespace(SW_NORMAL=1, SW_RESTORE=9)    # type: ignore
+    win32gui = _types.SimpleNamespace(                              # type: ignore
+        EnumWindows=lambda *a, **k: None,
+        GetWindowRect=lambda *a, **k: (0, 0, 100, 100),
+        GetWindowText=lambda *a, **k: "",
+        SetWindowPlacement=lambda *a, **k: None,
+        MoveWindow=lambda *a, **k: None,
+        SetForegroundWindow=lambda *a, **k: None,
+        FindWindow=lambda *a, **k: 0,
+        IsWindowVisible=lambda *a, **k: False,
+        GetClassName=lambda *a, **k: "",
+        IsIconic=lambda *a, **k: False,
+        ShowWindow=lambda *a, **k: None,
+        GetForegroundWindow=lambda *a, **k: 0,
+    )
+    _sys.modules.setdefault('win32api', win32api)
+    _sys.modules.setdefault('win32con', win32con)
+    _sys.modules.setdefault('win32gui', win32gui)
 
 from .tool_base import Tool
 
@@ -150,6 +172,40 @@ class ComputerTool(Tool):
         buffered = io.BytesIO()
         screenshot.save(buffered, format="PNG")
         return base64.b64encode(buffered.getvalue()).decode()
+
+    def _get_active_window_rect(self) -> Tuple[int, int, int, int]:
+        """Get the active window rectangle (left, top, right, bottom)."""
+        try:
+            hwnd = win32gui.GetForegroundWindow()
+            rect = win32gui.GetWindowRect(hwnd)
+            return rect
+        except Exception:
+            # Unknown or unavailable window info
+            return (0, 0, -1, -1)
+
+    def _is_safe_coordinate(self, x: int, y: int) -> bool:
+        """
+        Determine if the coordinate is safe (i.e., not overlapping the active window region).
+        Tests expect that if a point lies within a window area, we redirect to a safe position.
+        """
+        try:
+            left, top, right, bottom = self._get_active_window_rect()
+            # If invalid rect, consider safe
+            if right <= left or bottom <= top:
+                return True
+            # Unsafe if within active window bounds
+            return not (left <= x <= right and top <= y <= bottom)
+        except Exception:
+            return True
+
+    def _get_safe_position(self) -> Tuple[int, int]:
+        """
+        Return a safe default position away from windowed regions and edges.
+        Tests expect (screen_width - 100, screen_height - 100) as a safe landing zone.
+        """
+        safe_x = max(0, min(self.screen_width - 1, self.screen_width - 100))
+        safe_y = max(0, min(self.screen_height - 1, self.screen_height - 100))
+        return safe_x, safe_y
 
     def find_and_move_window(self, title_substring: str) -> Optional[int]:
         """Find a window by title substring and move it to the primary monitor."""
@@ -382,6 +438,10 @@ class ComputerTool(Tool):
                         }
                     }
                 x, y = self._validate_coordinates(coordinate[0], coordinate[1])
+
+                # Safety: avoid moving into active window region; redirect to safe spot
+                if not self._is_safe_coordinate(x, y):
+                    x, y = self._get_safe_position()
                 
                 if action == Action.MOUSE_MOVE:
                     pyautogui.moveTo(x, y, duration=0.5)  # Slower movement

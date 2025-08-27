@@ -6,7 +6,7 @@ Verifies that Claude can properly understand and use the tool for documentation 
 import os
 import pytest
 from unittest.mock import Mock, patch
-from tools.doc_check_tool import DocCheckTool
+from src.tools.doc_check_tool import DocCheckTool
 from anthropic import Anthropic
 import tempfile
 import shutil

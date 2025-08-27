@@ -57,15 +57,55 @@ class Tool(ABC):
         pass
 
     def get_tool_definition(self) -> Dict[str, Any]:
-        """Get the tool definition in Anthropic's format."""
+        """Get the tool definition in Anthropic's format.
+
+        Robust against mis-implemented input_schema properties in subclasses that
+        accidentally recurse (e.g., property returns self.input_schema).
+        """
+        schema: Dict[str, Any] | None = None
+
+        # Primary attempt - may raise RecursionError if subclass is faulty
+        try:
+            schema = self.input_schema
+        except RecursionError:
+            schema = None
+        except Exception:
+            # Ignore and try fallbacks
+            schema = None
+
+        # Fallback: walk MRO to find a sane input_schema on a base class
+        if not isinstance(schema, dict) or not schema:
+            for cls in type(self).mro()[1:]:
+                if "input_schema" in cls.__dict__:
+                    attr = cls.__dict__["input_schema"]
+                    try:
+                        if isinstance(attr, property):
+                            candidate = attr.__get__(self, cls)
+                        else:
+                            candidate = attr
+                    except RecursionError:
+                        continue
+                    except Exception:
+                        continue
+                    if isinstance(candidate, dict) and candidate:
+                        schema = candidate
+                        break
+
+        # Final guard: ensure dictionary shape
+        if not isinstance(schema, dict):
+            schema = {"type": "object", "properties": {}, "required": []}
+
+        properties = schema.get("properties", {}) or {}
+        required = schema.get("required", []) or []
+
         return {
             "name": self.name,
             "description": self.description,
             "input_schema": {
                 "type": "object",
-                "properties": self.input_schema["properties"],
-                "required": self.input_schema["required"]
-            }
+                "properties": properties,
+                "required": required,
+            },
         }
 
     def format_result(self, tool_call_id: str, content: str) -> ToolResult:

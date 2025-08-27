@@ -6,9 +6,9 @@ Tests include actual LLM tool usage to verify real-world functionality.
 import pytest
 import os
 from anthropic import Anthropic
-from tools.tool_base import Tool, ToolResult
-from tools.web_search_tool import WebSearchTool
-from tools.config import Config
+from src.tools.tool_base import Tool, ToolResult
+from src.tools.web_search_tool import WebSearchTool
+from src.tools.config import Config
 from unittest.mock import patch, MagicMock
 
 # Load config with API keys
