@@ -56,7 +56,7 @@ Your tool's `run()` method must return a dictionary with this structure:
 
 Example of a properly formatted tool:
 ```python
-from tools.tool_base import Tool
+from src.tools.tool_base import Tool
 
 class YourTool(Tool):
     name = "your_tool"
@@ -101,8 +101,8 @@ class YourTool(Tool):
 ### Basic Usage
 
 ```python
-from tools.deepseek_wrapper import DeepseekToolWrapper
-from tools.computer_tool import ComputerTool
+from src.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.tools.computer_tool import ComputerTool
 
 # Initialize wrapper and tools
 wrapper = DeepseekToolWrapper()
@@ -127,7 +127,7 @@ Tools must implement the base Tool interface and provide:
 - A run method
 
 ```python
-from tools.tool_base import Tool
+from src.tools.tool_base import Tool
 
 class YourTool(Tool):
     name = "your_tool"

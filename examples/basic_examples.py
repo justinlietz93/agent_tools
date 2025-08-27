@@ -1,7 +1,7 @@
 """Basic examples of using Deepseek Reasoner."""
 
-from tools.deepseek_wrapper import DeepseekToolWrapper
-from tools.computer_tool import ComputerTool
+from src.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.tools.computer_tool import ComputerTool
 import time
 
 def print_response(step: str, response: str):

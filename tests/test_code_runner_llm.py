@@ -6,8 +6,8 @@ Verifies that Claude can properly understand and use the code runner tool.
 import pytest
 import os
 from anthropic import Anthropic
-from tools.code_runner_tool import CodeRunnerTool
-from tools.config import Config
+from src.tools.code_runner_tool import CodeRunnerTool
+from src.tools.config import Config
 import shutil
 import json
 

@@ -8,7 +8,7 @@ Every tool must inherit from the base `Tool` class and implement the required in
 
 ```python
 from typing import Dict, Any
-from tools.tool_base import Tool
+from src.tools.tool_base import Tool
 
 class YourTool(Tool):
     name = "your_tool"  # Unique identifier for your tool
