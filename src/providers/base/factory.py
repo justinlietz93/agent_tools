@@ -17,11 +17,27 @@ from __future__ import annotations
 
 from typing import Optional, Dict, Type, Any
 
-from .interfaces import LLMProvider
+from typing import Any, Dict, Type
 
 
 class UnknownProviderError(Exception):
     pass
+
+
+def create_provider(provider: str, model: str | None = None, api_key: str | None = None, base_url: str | None = None, **kwargs: Any):
+    """
+    Create a provider wrapper instance based on provider name.
+    """
+    name = (provider or "").lower().strip()
+    if name == "ollama":
+        from src.infrastructure.llm.ollama_wrapper import OllamaWrapper
+        wrapper = OllamaWrapper(api_key=api_key, base_url=base_url, model=model)
+    elif name in {"openai", "deepseek", "gemini", "xai", "custom"}:
+        from src.infrastructure.llm.openai_compatible import OpenAICompatibleWrapper
+        wrapper = OpenAICompatibleWrapper(api_key=api_key, base_url=base_url, model=model)
+    else:
+        raise UnknownProviderError(f"Unknown provider '{provider}'")
+    return wrapper
 
 
 class ProviderFactory:
@@ -45,7 +61,7 @@ class ProviderFactory:
     }
 
     @classmethod
-    def create(cls, provider: str, **kwargs: Any) -> LLMProvider:
+    def create(cls, provider: str, **kwargs: Any):
         """
         Create a provider adapter instance.
 
@@ -68,7 +84,7 @@ class ProviderFactory:
 
         try:
             mod = __import__(module_path, fromlist=[class_name])
-            klass: Type[LLMProvider] = getattr(mod, class_name)
+            klass: Type = getattr(mod, class_name)
             return klass(**kwargs)  # type: ignore[call-arg]
         except Exception as e:
             raise UnknownProviderError(f"Failed to initialize provider '{provider}': {e}") from e

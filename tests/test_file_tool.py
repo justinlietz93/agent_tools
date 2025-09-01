@@ -4,8 +4,8 @@ import os
 import shutil
 import pytest
 import anthropic
-from src.tools.file_tool import FileTool
-from src.tools.tool_base import Tool
+from src.infrastructure.tools.file_tool import FileTool
+from src.infrastructure.tools.tool_base import Tool
 
 @pytest.fixture
 def test_dir():

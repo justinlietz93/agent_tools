@@ -4,8 +4,8 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.tools.deepseek_wrapper import DeepseekToolWrapper
-from src.tools.computer_tool import ComputerTool
+from src.infrastructure.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.tools.computer_tool import ComputerTool
 import time
 
 def print_response(step: str, response: str):

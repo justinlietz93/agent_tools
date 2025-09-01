@@ -58,7 +58,7 @@ Note: The framework no longer requires a DeepSeek API key for local usage.
 
 ```bash
 # From repo root
-python agent_tools/src/cli/app.py
+python agent_tools/src/ui/cli/app.py
 ```
 
 Then choose:

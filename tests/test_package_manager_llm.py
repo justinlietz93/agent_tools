@@ -14,7 +14,7 @@ import sys
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.tools.package_manager_tool import PackageManagerTool
+from src.infrastructure.tools.package_manager_tool import PackageManagerTool
 from tests.conftest import get_claude_response
 
 # Unit Tests (Mock LLM and Mock Tool Calls)

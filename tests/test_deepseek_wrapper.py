@@ -1,7 +1,7 @@
 import pytest
-from src.tools.deepseek_wrapper import DeepseekToolWrapper
-from src.tools.package_manager_tool import PackageManagerTool
-from src.tools.file_tool import FileTool
+from src.infrastructure.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.tools.package_manager_tool import PackageManagerTool
+from src.infrastructure.tools.file_tool import FileTool
 import os
 import subprocess
 

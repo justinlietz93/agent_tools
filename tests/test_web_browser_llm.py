@@ -4,11 +4,11 @@ Verifies that Claude can properly understand and use the web browser tool.
 """
 
 import pytest
-from src.tools.web_browser_tool import WebBrowserTool
-from src.tools.config import Config
+from src.infrastructure.tools.web_browser_tool import WebBrowserTool
+from src.infrastructure.tools.config import Config
 from anthropic import Anthropic
 import responses  # For mocking HTTP requests
-from src.tools.tool_base import ToolResult
+from src.infrastructure.tools.tool_base import ToolResult
 from typing import Dict, Any
 import requests
 

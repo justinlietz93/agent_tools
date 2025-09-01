@@ -1,1 +1,1 @@
-# Make 'agent_tools.src' a package for module execution (python -m agent_tools.src.cli.app)
+# Make 'agent_tools.src' a package for module execution (python -m agent_tools.src.ui.cli.app)

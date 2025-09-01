@@ -7,8 +7,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 import pyautogui
 import base64
-from src.tools.computer_tool import ComputerTool, Action
-from src.tools.config import Config
+from src.infrastructure.tools.computer_tool import ComputerTool, Action
+from src.infrastructure.tools.config import Config
 from anthropic import Anthropic
 import time
 import os

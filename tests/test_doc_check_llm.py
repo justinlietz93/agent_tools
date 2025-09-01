@@ -8,8 +8,8 @@ import os
 import pytest
 from typing import Dict, Any
 from anthropic import Anthropic
-from src.tools.doc_check_tool import DocCheckTool
-from src.tools.config import Config
+from src.infrastructure.tools.doc_check_tool import DocCheckTool
+from src.infrastructure.tools.config import Config
 
 # Load config with API keys
 config = Config()

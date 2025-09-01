@@ -68,3 +68,18 @@ db.sqlite3
 
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
+
+# Data
+*.db-shm
+*.db-wal
+*.db
+*.cache
+*.cache2
+*.cache3
+*.cache4
+*.cache5
+*.cache6
+*.cache7
+*.cache8
+*.cache9
+*.cache10

@@ -1,8 +1,8 @@
 """Tests for using tools with Deepseek Reasoner."""
 
 import pytest
-from src.tools.deepseek_wrapper import DeepseekToolWrapper
-from src.tools.computer_tool import ComputerTool
+from src.infrastructure.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.tools.computer_tool import ComputerTool
 from unittest.mock import patch, MagicMock
 
 @pytest.fixture

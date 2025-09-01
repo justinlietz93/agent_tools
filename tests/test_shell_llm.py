@@ -4,9 +4,9 @@ Verifies that Claude can properly understand and use the shell tool.
 """
 
 import pytest
-from src.tools.shell_tool import ShellTool
-from src.tools.tool_base import ToolResult
-from src.tools.config import Config
+from src.infrastructure.tools.shell_tool import ShellTool
+from src.infrastructure.tools.tool_base import ToolResult
+from src.infrastructure.tools.config import Config
 from anthropic import Anthropic
 import subprocess
 import os

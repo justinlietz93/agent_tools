@@ -4,10 +4,10 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.tools.deepseek_wrapper import DeepseekToolWrapper
-from src.tools.file_tool import FileTool
-from src.tools.shell_tool import ShellTool
-from src.tools.package_manager_tool import PackageManagerTool
+from src.infrastructure.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.tools.file_tool import FileTool
+from src.infrastructure.tools.shell_tool import ShellTool
+from src.infrastructure.tools.package_manager_tool import PackageManagerTool
 import time
 
 def print_response(step: str, response: str):

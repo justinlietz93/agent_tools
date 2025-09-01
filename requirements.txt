@@ -10,6 +10,9 @@ pyautogui>=0.9.54
 # Additional core dependencies
 openai>=1.0.0  # For Deepseek API compatibility
 
+# Optional: OpenAI Agents SDK for advanced agent orchestration
+# openai-agents>=0.1.0  # Uncomment to enable AGENT_TOOLS_OPENAI_AGENTS=1
+
 # Additional testing
 pytest-asyncio>=0.21.0  # For async test support
 

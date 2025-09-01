@@ -1,7 +1,7 @@
 import pytest
 import os
 import json
-from src.tools.code_runner_tool import CodeRunnerTool
+from src.infrastructure.tools.code_runner_tool import CodeRunnerTool
 
 @pytest.fixture
 def code_runner():

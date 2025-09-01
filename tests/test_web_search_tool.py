@@ -20,7 +20,7 @@ Test Categories:
 
 import pytest
 from unittest.mock import patch, MagicMock
-from src.tools.web_search_tool import WebSearchTool
+from src.infrastructure.tools.web_search_tool import WebSearchTool
 from anthropic import Anthropic
 import responses
 import requests
