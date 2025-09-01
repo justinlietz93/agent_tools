@@ -2,7 +2,6 @@
 
 from typing import Dict, Any, List, Type
 from .tool_base import Tool
-from .config import Config
 
 # Import all available tools
 from .shell_tool import ShellTool
@@ -10,7 +9,6 @@ from .requests_tool import RequestsTool
 from .file_tool import FileTool
 from .web_search_tool import WebSearchTool
 from .web_browser_tool import WebBrowserTool
-from .doc_check_tool import DocCheckTool
 from .package_manager_tool import PackageManagerTool
 from .advanced_file_tool import AdvancedFileTool
 from .code_runner_tool import CodeRunnerTool
@@ -38,15 +36,11 @@ class ToolManager:
             ShellTool(),
             RequestsTool(),
             FileTool(),
-            WebSearchTool(
-                api_key=Config.GOOGLE_SEARCH_API_KEY,
-                engine_id=Config.GOOGLE_SEARCH_ENGINE_ID
-            ),
-            WebBrowserTool(timeout=Config.WEB_BROWSER_TIMEOUT),
-            DocCheckTool(),
+            WebSearchTool(),       # No API key args; uses direct HTTP fetch
+            WebBrowserTool(),      # No timeout arg; accepts optional user_agent only
             PackageManagerTool(),
             AdvancedFileTool(),
-            CodeRunnerTool()
+            CodeRunnerTool(),
         ]
         for tool in default_tools:
             self.register_tool(tool)

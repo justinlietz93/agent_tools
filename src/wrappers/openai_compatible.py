@@ -65,18 +65,89 @@ class OpenAICompatibleWrapper(LLMWrapper):
 
     def _extract_tool_call(self, content: str) -> Optional[Dict[str, Any]]:
         """
-        Extract tool call JSON following the sentinel 'TOOL_CALL:'.
+        Robustly extract a tool call JSON object from model output.
 
-        The model is instructed to output EXACT JSON immediately after the sentinel.
+        Accepted forms (case-insensitive):
+        - TOOL_CALL: { ... }                 # preferred sentinel
+        - Tool Call: ```json { ... } ```     # fenced JSON
+        - Any first JSON object in content that has keys: "tool" and "input_schema"
         """
+        txt = content or ""
         try:
-            marker = "TOOL_CALL:"
-            if marker not in content:
-                return None
-            tool_json = content.split(marker, 1)[1].strip()
-            return json.loads(tool_json)
+            # 1) Preferred sentinel, case-insensitive
+            lower = txt.lower()
+            for sentinel in ("tool_call:", "tool call:", "toolcall:"):
+                if sentinel in lower:
+                    idx = lower.index(sentinel) + len(sentinel)
+                    tail = txt[idx:].strip()
+                    # if fenced, strip first fence
+                    if tail.startswith("```"):
+                        fence_end = tail.find("```", 3)
+                        if fence_end != -1:
+                            tail = tail[3:fence_end]
+                    # attempt direct JSON parse
+                    try:
+                        obj = json.loads(tail)
+                        if isinstance(obj, dict) and "tool" in obj and "input_schema" in obj:
+                            return obj
+                    except Exception:
+                        pass
+            # 2) Code-fenced JSON blocks ```json ... ```
+            import re
+            fence_re = re.compile(r"```(?:json)?\s*([\s\S]*?)```", re.IGNORECASE)
+            for m in fence_re.finditer(txt):
+                block = m.group(1).strip()
+                try:
+                    obj = json.loads(block)
+                    if isinstance(obj, dict) and "tool" in obj and "input_schema" in obj:
+                        return obj
+                except Exception:
+                    continue
+            # 3) First JSON object heuristic (balanced braces) that looks like a tool call
+            #    Scan for a '{' then attempt to parse incrementally until balanced.
+            start = txt.find("{")
+            while start != -1:
+                depth = 0
+                for end in range(start, len(txt)):
+                    ch = txt[end]
+                    if ch == "{":
+                        depth += 1
+                    elif ch == "}":
+                        depth -= 1
+                        if depth == 0:
+                            candidate = txt[start : end + 1]
+                            try:
+                                obj = json.loads(candidate)
+                                if isinstance(obj, dict) and "tool" in obj and "input_schema" in obj:
+                                    return obj
+                            except Exception:
+                                pass
+                            break
+                start = txt.find("{", start + 1)
         except Exception:
-            return None
+            pass
+        return None
+
+    def _build_strict_tool_prompt(self) -> str:
+        """
+        Build a strict system instruction forcing a pure JSON tool call.
+        This improves reliability on weaker OpenAI-compatible models (e.g., some Ollama models).
+        """
+        # Expose available tools with their JSONSchema exactly
+        chunks = [
+            "You MUST output ONLY a JSON object for a tool call. No prose, no backticks, no extra text.",
+            "The JSON MUST have exactly these keys: tool (string), input_schema (object).",
+            "Available tools and their JSON schemas follow. Choose exactly one and fill input_schema accordingly."
+        ]
+        for name, info in self.tools.items():
+            schema = info.get("raw_schema") or {}
+            chunks.append(f"TOOL {name} SCHEMA:")
+            try:
+                chunks.append(json.dumps(schema, ensure_ascii=False))
+            except Exception:
+                chunks.append(str(schema))
+        chunks.append('Example output shape (choose valid tool): {"tool":"file","input_schema":{"operation":"read","path":"..."} }')
+        return "\n".join(chunks)
 
     def _infer_reasoning(self, content: str, reasoning_content: Optional[str]) -> str:
         """

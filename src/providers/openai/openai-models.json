@@ -1,0 +1,1089 @@
+{
+  "provider": "openai",
+  "models": [
+    {
+      "id": "gpt-4-0613",
+      "name": "gpt-4-0613",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-06-12"
+    },
+    {
+      "id": "gpt-4",
+      "name": "gpt-4",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-06-27"
+    },
+    {
+      "id": "gpt-3.5-turbo",
+      "name": "gpt-3.5-turbo",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-02-28"
+    },
+    {
+      "id": "gpt-audio",
+      "name": "gpt-audio",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-28"
+    },
+    {
+      "id": "gpt-5-nano",
+      "name": "gpt-5-nano",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-05"
+    },
+    {
+      "id": "gpt-audio-2025-08-28",
+      "name": "gpt-audio-2025-08-28",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-28"
+    },
+    {
+      "id": "gpt-realtime",
+      "name": "gpt-realtime",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-27"
+    },
+    {
+      "id": "gpt-realtime-2025-08-28",
+      "name": "gpt-realtime-2025-08-28",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-28"
+    },
+    {
+      "id": "davinci-002",
+      "name": "davinci-002",
+      "provider": "openai",
+      "family": "davinci",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-08-21"
+    },
+    {
+      "id": "babbage-002",
+      "name": "babbage-002",
+      "provider": "openai",
+      "family": "babbage",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-08-21"
+    },
+    {
+      "id": "gpt-3.5-turbo-instruct",
+      "name": "gpt-3.5-turbo-instruct",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-08-24"
+    },
+    {
+      "id": "gpt-3.5-turbo-instruct-0914",
+      "name": "gpt-3.5-turbo-instruct-0914",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-09-07"
+    },
+    {
+      "id": "dall-e-3",
+      "name": "dall-e-3",
+      "provider": "openai",
+      "family": "dall",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-10-31"
+    },
+    {
+      "id": "dall-e-2",
+      "name": "dall-e-2",
+      "provider": "openai",
+      "family": "dall",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-11-01"
+    },
+    {
+      "id": "gpt-4-1106-preview",
+      "name": "gpt-4-1106-preview",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-11-02"
+    },
+    {
+      "id": "gpt-3.5-turbo-1106",
+      "name": "gpt-3.5-turbo-1106",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-11-02"
+    },
+    {
+      "id": "tts-1-hd",
+      "name": "tts-1-hd",
+      "provider": "openai",
+      "family": "tts",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-11-03"
+    },
+    {
+      "id": "tts-1-1106",
+      "name": "tts-1-1106",
+      "provider": "openai",
+      "family": "tts",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-11-03"
+    },
+    {
+      "id": "tts-1-hd-1106",
+      "name": "tts-1-hd-1106",
+      "provider": "openai",
+      "family": "tts",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-11-03"
+    },
+    {
+      "id": "text-embedding-3-small",
+      "name": "text-embedding-3-small",
+      "provider": "openai",
+      "family": "text",
+      "context_length": null,
+      "capabilities": {
+        "embedding": true,
+        "json_output": true
+      },
+      "updated_at": "2024-01-22"
+    },
+    {
+      "id": "text-embedding-3-large",
+      "name": "text-embedding-3-large",
+      "provider": "openai",
+      "family": "text",
+      "context_length": null,
+      "capabilities": {
+        "embedding": true,
+        "json_output": true
+      },
+      "updated_at": "2024-01-22"
+    },
+    {
+      "id": "gpt-4-0125-preview",
+      "name": "gpt-4-0125-preview",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2024-01-23"
+    },
+    {
+      "id": "gpt-4-turbo-preview",
+      "name": "gpt-4-turbo-preview",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2024-01-23"
+    },
+    {
+      "id": "gpt-3.5-turbo-0125",
+      "name": "gpt-3.5-turbo-0125",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2024-01-23"
+    },
+    {
+      "id": "gpt-4-turbo",
+      "name": "gpt-4-turbo",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2024-04-05"
+    },
+    {
+      "id": "gpt-4-turbo-2024-04-09",
+      "name": "gpt-4-turbo-2024-04-09",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2024-04-09"
+    },
+    {
+      "id": "gpt-4o",
+      "name": "gpt-4o",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-05-10"
+    },
+    {
+      "id": "gpt-4o-2024-05-13",
+      "name": "gpt-4o-2024-05-13",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-05-13"
+    },
+    {
+      "id": "gpt-4o-mini-2024-07-18",
+      "name": "gpt-4o-mini-2024-07-18",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-07-18"
+    },
+    {
+      "id": "gpt-4o-mini",
+      "name": "gpt-4o-mini",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-07-16"
+    },
+    {
+      "id": "gpt-4o-2024-08-06",
+      "name": "gpt-4o-2024-08-06",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-08-06"
+    },
+    {
+      "id": "chatgpt-4o-latest",
+      "name": "chatgpt-4o-latest",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-08-13"
+    },
+    {
+      "id": "o1-mini-2024-09-12",
+      "name": "o1-mini-2024-09-12",
+      "provider": "openai",
+      "family": "o1",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2024-09-12"
+    },
+    {
+      "id": "o1-mini",
+      "name": "o1-mini",
+      "provider": "openai",
+      "family": "o1",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2024-09-06"
+    },
+    {
+      "id": "gpt-4o-realtime-preview-2024-10-01",
+      "name": "gpt-4o-realtime-preview-2024-10-01",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-10-01"
+    },
+    {
+      "id": "gpt-4o-audio-preview-2024-10-01",
+      "name": "gpt-4o-audio-preview-2024-10-01",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-10-01"
+    },
+    {
+      "id": "gpt-4o-audio-preview",
+      "name": "gpt-4o-audio-preview",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-09-27"
+    },
+    {
+      "id": "gpt-4o-realtime-preview",
+      "name": "gpt-4o-realtime-preview",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-09-30"
+    },
+    {
+      "id": "omni-moderation-latest",
+      "name": "omni-moderation-latest",
+      "provider": "openai",
+      "family": "omni",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-11-15"
+    },
+    {
+      "id": "omni-moderation-2024-09-26",
+      "name": "omni-moderation-2024-09-26",
+      "provider": "openai",
+      "family": "omni",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-09-26"
+    },
+    {
+      "id": "gpt-4o-realtime-preview-2024-12-17",
+      "name": "gpt-4o-realtime-preview-2024-12-17",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-17"
+    },
+    {
+      "id": "gpt-4o-audio-preview-2024-12-17",
+      "name": "gpt-4o-audio-preview-2024-12-17",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-17"
+    },
+    {
+      "id": "gpt-4o-mini-realtime-preview-2024-12-17",
+      "name": "gpt-4o-mini-realtime-preview-2024-12-17",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-17"
+    },
+    {
+      "id": "gpt-4o-mini-audio-preview-2024-12-17",
+      "name": "gpt-4o-mini-audio-preview-2024-12-17",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-17"
+    },
+    {
+      "id": "o1-2024-12-17",
+      "name": "o1-2024-12-17",
+      "provider": "openai",
+      "family": "o1",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-17"
+    },
+    {
+      "id": "o1",
+      "name": "o1",
+      "provider": "openai",
+      "family": "o1",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-16"
+    },
+    {
+      "id": "gpt-4o-mini-realtime-preview",
+      "name": "gpt-4o-mini-realtime-preview",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-16"
+    },
+    {
+      "id": "gpt-4o-mini-audio-preview",
+      "name": "gpt-4o-mini-audio-preview",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-12-16"
+    },
+    {
+      "id": "computer-use-preview",
+      "name": "computer-use-preview",
+      "provider": "openai",
+      "family": "computer",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2024-12-20"
+    },
+    {
+      "id": "o3-mini",
+      "name": "o3-mini",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-01-17"
+    },
+    {
+      "id": "o3-mini-2025-01-31",
+      "name": "o3-mini-2025-01-31",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-01-31"
+    },
+    {
+      "id": "gpt-4o-2024-11-20",
+      "name": "gpt-4o-2024-11-20",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2024-11-20"
+    },
+    {
+      "id": "computer-use-preview-2025-03-11",
+      "name": "computer-use-preview-2025-03-11",
+      "provider": "openai",
+      "family": "computer",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-03-11"
+    },
+    {
+      "id": "gpt-4o-search-preview-2025-03-11",
+      "name": "gpt-4o-search-preview-2025-03-11",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-11"
+    },
+    {
+      "id": "gpt-4o-search-preview",
+      "name": "gpt-4o-search-preview",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-07"
+    },
+    {
+      "id": "gpt-4o-mini-search-preview-2025-03-11",
+      "name": "gpt-4o-mini-search-preview-2025-03-11",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-11"
+    },
+    {
+      "id": "gpt-4o-mini-search-preview",
+      "name": "gpt-4o-mini-search-preview",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-07"
+    },
+    {
+      "id": "gpt-4o-transcribe",
+      "name": "gpt-4o-transcribe",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-15"
+    },
+    {
+      "id": "gpt-4o-mini-transcribe",
+      "name": "gpt-4o-mini-transcribe",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-15"
+    },
+    {
+      "id": "o1-pro-2025-03-19",
+      "name": "o1-pro-2025-03-19",
+      "provider": "openai",
+      "family": "o1",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-19"
+    },
+    {
+      "id": "o1-pro",
+      "name": "o1-pro",
+      "provider": "openai",
+      "family": "o1",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-17"
+    },
+    {
+      "id": "gpt-4o-mini-tts",
+      "name": "gpt-4o-mini-tts",
+      "provider": "openai",
+      "family": "gpt-4o-mini",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2025-03-19"
+    },
+    {
+      "id": "o3-2025-04-16",
+      "name": "o3-2025-04-16",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-04-16"
+    },
+    {
+      "id": "o4-mini-2025-04-16",
+      "name": "o4-mini-2025-04-16",
+      "provider": "openai",
+      "family": "o4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-16"
+    },
+    {
+      "id": "o3",
+      "name": "o3",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-04-09"
+    },
+    {
+      "id": "o4-mini",
+      "name": "o4-mini",
+      "provider": "openai",
+      "family": "o4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-09"
+    },
+    {
+      "id": "gpt-4.1-2025-04-14",
+      "name": "gpt-4.1-2025-04-14",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-14"
+    },
+    {
+      "id": "gpt-4.1",
+      "name": "gpt-4.1",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-10"
+    },
+    {
+      "id": "gpt-4.1-mini-2025-04-14",
+      "name": "gpt-4.1-mini-2025-04-14",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-14"
+    },
+    {
+      "id": "gpt-4.1-mini",
+      "name": "gpt-4.1-mini",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-10"
+    },
+    {
+      "id": "gpt-4.1-nano-2025-04-14",
+      "name": "gpt-4.1-nano-2025-04-14",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-14"
+    },
+    {
+      "id": "gpt-4.1-nano",
+      "name": "gpt-4.1-nano",
+      "provider": "openai",
+      "family": "gpt-4",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-10"
+    },
+    {
+      "id": "gpt-image-1",
+      "name": "gpt-image-1",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-04-24"
+    },
+    {
+      "id": "codex-mini-latest",
+      "name": "codex-mini-latest",
+      "provider": "openai",
+      "family": "codex",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-05-08"
+    },
+    {
+      "id": "o3-pro",
+      "name": "o3-pro",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-05-28"
+    },
+    {
+      "id": "gpt-4o-realtime-preview-2025-06-03",
+      "name": "gpt-4o-realtime-preview-2025-06-03",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2025-06-03"
+    },
+    {
+      "id": "gpt-4o-audio-preview-2025-06-03",
+      "name": "gpt-4o-audio-preview-2025-06-03",
+      "provider": "openai",
+      "family": "gpt-4o",
+      "context_length": null,
+      "capabilities": {
+        "vision": true,
+        "json_output": true
+      },
+      "updated_at": "2025-06-03"
+    },
+    {
+      "id": "o3-pro-2025-06-10",
+      "name": "o3-pro-2025-06-10",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "json_output": true
+      },
+      "updated_at": "2025-06-10"
+    },
+    {
+      "id": "o4-mini-deep-research",
+      "name": "o4-mini-deep-research",
+      "provider": "openai",
+      "family": "o4",
+      "context_length": null,
+      "capabilities": {
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-06-11"
+    },
+    {
+      "id": "o3-deep-research",
+      "name": "o3-deep-research",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-06-13"
+    },
+    {
+      "id": "o3-deep-research-2025-06-26",
+      "name": "o3-deep-research-2025-06-26",
+      "provider": "openai",
+      "family": "o3",
+      "context_length": null,
+      "capabilities": {
+        "reasoning": true,
+        "responses_api": true,
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-06-26"
+    },
+    {
+      "id": "o4-mini-deep-research-2025-06-26",
+      "name": "o4-mini-deep-research-2025-06-26",
+      "provider": "openai",
+      "family": "o4",
+      "context_length": null,
+      "capabilities": {
+        "search": true,
+        "json_output": true
+      },
+      "updated_at": "2025-06-26"
+    },
+    {
+      "id": "gpt-5-chat-latest",
+      "name": "gpt-5-chat-latest",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-01"
+    },
+    {
+      "id": "gpt-5-2025-08-07",
+      "name": "gpt-5-2025-08-07",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-07"
+    },
+    {
+      "id": "gpt-5",
+      "name": "gpt-5",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-05"
+    },
+    {
+      "id": "gpt-5-mini-2025-08-07",
+      "name": "gpt-5-mini-2025-08-07",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-07"
+    },
+    {
+      "id": "gpt-5-mini",
+      "name": "gpt-5-mini",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-05"
+    },
+    {
+      "id": "gpt-5-nano-2025-08-07",
+      "name": "gpt-5-nano-2025-08-07",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2025-08-07"
+    },
+    {
+      "id": "gpt-3.5-turbo-16k",
+      "name": "gpt-3.5-turbo-16k",
+      "provider": "openai",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-05-10"
+    },
+    {
+      "id": "tts-1",
+      "name": "tts-1",
+      "provider": "openai",
+      "family": "tts",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-04-19"
+    },
+    {
+      "id": "whisper-1",
+      "name": "whisper-1",
+      "provider": "openai",
+      "family": "whisper",
+      "context_length": null,
+      "capabilities": {
+        "json_output": true
+      },
+      "updated_at": "2023-02-27"
+    },
+    {
+      "id": "text-embedding-ada-002",
+      "name": "text-embedding-ada-002",
+      "provider": "openai",
+      "family": "text",
+      "context_length": null,
+      "capabilities": {
+        "embedding": true,
+        "json_output": true
+      },
+      "updated_at": "2022-12-16"
+    }
+  ],
+  "fetched_at": "2025-09-01T02:01:55.745157+00:00",
+  "fetched_via": "api",
+  "metadata": {
+    "source": "openai_sdk_enriched"
+  }
+}
