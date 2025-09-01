@@ -115,6 +115,115 @@ class OllamaWrapper(OpenAICompatibleWrapper):
     def _strip_code_fences(self, s: str) -> str:
         """
         Remove a single leading or first code-fence block ```...``` if present.
+        Returns the inner content trimmed, else the original string trimmed.
+        """
+        if not isinstance(s, str):
+            return s  # type: ignore[return-value]
+        text = s.strip()
+        if text.startswith("```"):
+            end = text.find("```", 3)
+            if end != -1:
+                return text[3:end].strip()
+        idx = text.find("```")
+        if idx != -1:
+            end = text.find("```", idx + 3)
+            if end != -1:
+                return text[idx + 3:end].strip()
+        return text
+
+    def _parse_args_safely(self, raw: Any) -> Dict[str, Any]:
+        """
+        Best-effort conversion of tool 'arguments' into a dict.
+        Handles:
+        - dict pass-through
+        - JSON string (with or without ``` fences)
+        - Strings containing extra trailing text by extracting the first balanced {...} object
+        """
+        if isinstance(raw, dict):
+            return raw
+        if isinstance(raw, str):
+            text = self._strip_code_fences(raw)
+            try:
+                obj = json.loads(text)
+                return obj if isinstance(obj, dict) else {}
+            except Exception:
+                # attempt to extract first balanced JSON object
+                start = text.find("{")
+                while start != -1:
+                    depth = 0
+                    for i in range(start, len(text)):
+                        ch = text[i]
+                        if ch == "{":
+                            depth += 1
+                        elif ch == "}":
+                            depth -= 1
+                            if depth == 0:
+                                candidate = text[start : i + 1]
+                                try:
+                                    obj = json.loads(candidate)
+                                    if isinstance(obj, dict):
+                                        return obj
+                                except Exception:
+                                    pass
+                                break
+                    start = text.find("{", start + 1)
+        return {}
+
+    def _parse_json_relaxed(self, text: str) -> Dict[str, Any]:
+        """
+        Parse Ollama /api/chat response bodies that may contain NDJSON or extra text.
+        Strategy:
+        - Try strict json.loads
+        - Fallback to NDJSON: decode each non-empty line and take the last object
+        - Fallback to balanced-brace scan to extract the first JSON object
+        """
+        # Strict parse first
+        try:
+            obj = json.loads(text)
+            if isinstance(obj, dict):
+                return obj
+        except Exception:
+            pass
+
+        # NDJSON fallback
+        last_obj: Dict[str, Any] | None = None
+        for line in text.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                o = json.loads(line)
+                if isinstance(o, dict):
+                    last_obj = o
+            except Exception:
+                continue
+        if last_obj is not None:
+            return last_obj
+
+        # Balanced-brace scan
+        start = text.find("{")
+        while start != -1:
+            depth = 0
+            for i in range(start, len(text)):
+                ch = text[i]
+                if ch == "{":
+                    depth += 1
+                elif ch == "}":
+                    depth -= 1
+                    if depth == 0:
+                        candidate = text[start : i + 1]
+                        try:
+                            o = json.loads(candidate)
+                            if isinstance(o, dict):
+                                return o
+                        except Exception:
+                            pass
+                        break
+            start = text.find("{", start + 1)
+        return {}
+    def _strip_code_fences(self, s: str) -> str:
+        """
+        Remove a single leading or first code-fence block ```...``` if present.
         """
         if not isinstance(s, str):
             return s
