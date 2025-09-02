@@ -340,3 +340,112 @@ class OllamaWrapper(OpenAICompatibleWrapper):
             return f"Error executing tool: {str(e)}"
         except Exception as e:
             return f"Error executing tool: {str(e)}"
+    def stream_and_collect(self, user_input: str, on_delta) -> str:
+        """
+        Stream tokens via Ollama /api/chat with 'stream': true.
+        Emits deltas via on_delta and returns the same formatted string as execute().
+
+        This overrides the base OpenAI-compatible streaming to prefer Ollama's native
+        Harmony /api/chat stream, which yields NDJSON objects containing partial
+        assistant content in 'message.content'. Falls back to the base implementation
+        (OpenAI-compatible /v1) and then to non-streaming execute() if needed.
+        """
+        try:
+            system_prompt = self._create_system_prompt()
+
+            payload = {
+                "model": self.model,
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_input},
+                ],
+                "tools": self._build_ollama_tools(),
+                "stream": True,  # NDJSON chunks with partial 'message.content'
+            }
+
+            url = f"{self._root_host()}/api/chat"
+            headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+            # Some Ollama servers emit cumulative content; stream only the delta.
+            content_accum: str = ""
+            prev_piece: str = ""
+
+            with requests.post(url, headers=headers, data=json.dumps(payload), stream=True) as resp:
+                resp.raise_for_status()
+                for line in resp.iter_lines(decode_unicode=True, chunk_size=1):
+                    if not line:
+                        continue
+                    try:
+                        o = json.loads(line)
+                    except Exception:
+                        continue
+
+                    # Prefer Harmony 'message.content'; fallback to OpenAI-compatible 'response'
+                    piece = ""
+                    msg = o.get("message")
+                    if isinstance(msg, dict):
+                        piece = str(msg.get("content") or "")
+                    if not piece:
+                        piece = str(o.get("response") or "")
+
+                    if not piece:
+                        continue
+
+                    # Compute delta vs accumulated content, handling both incremental and cumulative streams
+                    delta = piece
+                    if content_accum and piece.startswith(content_accum):
+                        delta = piece[len(content_accum) :]
+                    elif piece == prev_piece or piece == content_accum:
+                        delta = ""
+                    elif content_accum:
+                        pos = piece.find(content_accum)
+                        if pos >= 0:
+                            delta = piece[pos + len(content_accum) :]
+
+                    if delta:
+                        on_delta(delta)
+                        content_accum += delta
+                    prev_piece = piece
+
+            content = content_accum
+
+            # Format result similar to execute()
+            reasoning: str = content  # For Ollama, use assistant content as reasoning section
+
+            # Attempt sentinel parsing for tool call
+            tool_call = self._extract_tool_call(content) if hasattr(self, "_extract_tool_call") else None
+            if not tool_call:
+                content_str = (content or "").strip()
+                if content_str:
+                    reasoning_str = (reasoning or "").strip()
+                    if reasoning_str == content_str:
+                        reasoning_str = ""
+                    return f"Reasoning:\n{reasoning_str}\n\nResponse:\n{content_str}"
+                else:
+                    return f"Reasoning:\n{(reasoning or '').strip()}\n\nNo valid tool call was made."
+
+            tool_name = tool_call.get("tool")
+            params = tool_call.get("input_schema", {}) or {}
+            if not tool_name or tool_name not in self.tools:
+                return f"Reasoning:\n{reasoning}\n\nError: Tool '{tool_name}' not found."
+
+            tool = self.tools[tool_name]["tool"]
+            result = tool.run(params)
+            return (
+                f"Reasoning:\n{reasoning}\n\n"
+                f"Tool Call:\n{json.dumps(tool_call, indent=2)}\n\n"
+                f"Result:\n{result}"
+            )
+
+        except requests.HTTPError as e:
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            url_s = locals().get("url", "")
+            if status == 404 and "/api/chat" in url_s:
+                return f"Error executing tool: Ollama /api/chat not available at {url_s}. Ensure your Ollama server exposes the Harmony /api/chat endpoint or upgrade. Alternatively, switch to the OpenAI-compatible path (/v1) via provider 'custom' or 'openai'."
+            return f"Error executing tool: {str(e)}"
+        except Exception:
+            # Fallback to base OpenAI-compatible streaming, then to non-streaming
+            try:
+                return super().stream_and_collect(user_input, on_delta)
+            except Exception:
+                return self.execute(user_input)

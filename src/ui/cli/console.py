@@ -4,6 +4,7 @@ Console utilities for CLI.
 
 from rich.console import Console
 from rich.theme import Theme
+import os
 
 
 def make_console(theme_name: str, use_color: bool = True) -> Console:
@@ -34,10 +35,19 @@ def make_console(theme_name: str, use_color: bool = True) -> Console:
             }
         )
     # no_color=True disables ANSI codes for environments that don't support them
+    # Prefer 24-bit color when the terminal advertises truecolor support.
+    try:
+        colorterm = (os.getenv("COLORTERM") or "").lower()
+        has_truecolor = ("truecolor" in colorterm) or ("24bit" in colorterm)
+    except Exception:
+        has_truecolor = False
+
+    color_system = ("truecolor" if (use_color and has_truecolor) else ("standard" if use_color else None))
+
     return Console(
         theme=theme,
         no_color=not use_color,
-        color_system=("standard" if use_color else None),
+        color_system=color_system,
         force_terminal=use_color,
         markup=False,
     )

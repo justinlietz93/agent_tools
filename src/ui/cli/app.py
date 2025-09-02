@@ -121,6 +121,10 @@ def run() -> None:
     console = make_console("light" if theme in ("light", "white") else "dark", use_color=use_color)
     session = PromptSession(history=InMemoryHistory())
 
+    try:
+        console.clear()
+    except Exception:
+        pass
     console.print(
         Panel(
             "Agent Tools CLI\n"
@@ -151,150 +155,191 @@ def run() -> None:
     show_help(console)
 
     completer = WordCompleter(
-        ["/help", "/tools", "/config", "/models", "/model", "/call", "/auth", "/prefs", "/provider", "/theme", "/colors", "/clear", "/exit"],
+        ["/help", "/tools", "/config", "/models", "/model", "/call", "/auth", "/prefs", "/provider", "/theme", "/colors", "/clear", "/streamtest", "/exit"],
         ignore_case=True,
         match_middle=True,
     )
 
-    with patch_stdout():
-        while True:
-            try:
+    while True:
+        try:
+            with patch_stdout():
                 user_input = session.prompt("> ", completer=completer)
-            except (KeyboardInterrupt, EOFError):
-                console.print("\n[warning]Exiting...[/warning]")
-                break
+        except (KeyboardInterrupt, EOFError):
+            console.print("\n[warning]Exiting...[/warning]")
+            break
 
-            cmd = user_input.strip()
-            if not cmd:
-                continue
+        cmd = user_input.strip()
+        if not cmd:
+            continue
 
-            # Built-in commands
-            if cmd == "/help":
-                show_help(console)
-                continue
-            if cmd == "/tools":
-                list_tools(console, catalog)
-                continue
-            if cmd == "/config":
-                show_config(console, wrapper, provider_name=provider)
-                continue
-            if cmd.startswith("/models"):
-                refresh = any(tok.lower().startswith("ref") for tok in cmd.split()[1:])
-                show_models(console, provider, refresh=refresh)
-                continue
-            if cmd.startswith("/model"):
-                parts = cmd.split(maxsplit=1)
-                if len(parts) == 2 and parts[1].strip():
-                    wrapper.model = parts[1].strip()
-                    print(f"Model set to '{wrapper.model}'")
-                    try:
+        # Built-in commands
+        if cmd == "/help":
+            show_help(console)
+            continue
+        if cmd == "/tools":
+            list_tools(console, catalog)
+            continue
+        if cmd == "/config":
+            show_config(console, wrapper, provider_name=provider)
+            continue
+        if cmd.startswith("/models"):
+            refresh = any(tok.lower().startswith("ref") for tok in cmd.split()[1:])
+            show_models(console, provider, refresh=refresh)
+            continue
+        if cmd.startswith("/model"):
+            parts = cmd.split(maxsplit=1)
+            if len(parts) == 2 and parts[1].strip():
+                wrapper.model = parts[1].strip()
+                print(f"Model set to '{wrapper.model}'")
+                try:
+                    settings_repo.set_pref(f"model.{provider}", wrapper.model)
+                except Exception:
+                    pass
+            else:
+                select_model_interactive(console, session, wrapper, provider)
+                try:
+                    if getattr(wrapper, "model", None):
                         settings_repo.set_pref(f"model.{provider}", wrapper.model)
-                    except Exception:
-                        pass
-                else:
-                    select_model_interactive(console, session, wrapper, provider)
+                except Exception:
+                    pass
+            continue
+        if cmd.startswith("/call"):
+            parts = cmd.split(maxsplit=2)
+            handle_call(console, invoker, parts)
+            continue
+        if cmd.startswith("/auth"):
+            parts = cmd.split(maxsplit=2)
+            handle_auth(console, session, settings_repo, provider, parts)
+            # If updating the current provider, re-instantiate wrapper to pick changes
+            auth_provider = parts[1].strip().lower() if len(parts) > 1 else ""
+            if auth_provider == provider:
+                wrapper: ILLM = instantiate_wrapper(provider, console, session, repo=settings_repo)
+                for tool in tools:
+                    wrapper.register_tool(tool)
+            continue
+        if cmd == "/prefs":
+            handle_prefs(console, settings_repo)
+            continue
+        if cmd.startswith("/provider"):
+            parts = cmd.split(maxsplit=1)
+            if len(parts) == 2 and parts[1].strip():
+                requested = parts[1].strip().lower()
+                if requested in {"deepseek", "ollama", "openai", "custom"}:
+                    # Direct provider switch without interactive prompt
                     try:
-                        if getattr(wrapper, "model", None):
-                            settings_repo.set_pref(f"model.{provider}", wrapper.model)
+                        console.clear()
                     except Exception:
                         pass
-                continue
-            if cmd.startswith("/call"):
-                parts = cmd.split(maxsplit=2)
-                handle_call(console, invoker, parts)
-                continue
-            if cmd.startswith("/auth"):
-                parts = cmd.split(maxsplit=2)
-                handle_auth(console, session, settings_repo, provider, parts)
-                # If updating the current provider, re-instantiate wrapper to pick changes
-                auth_provider = parts[1].strip().lower() if len(parts) > 1 else ""
-                if auth_provider == provider:
-                    wrapper: ILLM = instantiate_wrapper(provider, console, session, repo=settings_repo)
+                    provider = requested
+                    wrapper = instantiate_wrapper(provider, console, session, repo=settings_repo)
+                    try:
+                        settings_repo.set_pref("last_provider", provider)
+                    except Exception:
+                        pass
+                    # Restore model if available
+                    saved_model = settings_repo.get_pref(f"model.{provider}")
+                    if saved_model:
+                        wrapper.model = saved_model
+                    # Re-register tools on new wrapper
                     for tool in tools:
                         wrapper.register_tool(tool)
-                continue
-            if cmd == "/prefs":
-                handle_prefs(console, settings_repo)
-                continue
-            if cmd.startswith("/provider"):
-                parts = cmd.split(maxsplit=1)
-                if len(parts) == 2 and parts[1].strip():
-                    requested = parts[1].strip().lower()
-                    if requested in {"deepseek", "ollama", "openai", "custom"}:
-                        # Direct provider switch without interactive prompt
-                        provider = requested
-                        wrapper = instantiate_wrapper(provider, console, session, repo=settings_repo)
-                        try:
-                            settings_repo.set_pref("last_provider", provider)
-                        except Exception:
-                            pass
-                        # Restore model if available
-                        saved_model = settings_repo.get_pref(f"model.{provider}")
-                        if saved_model:
-                            wrapper.model = saved_model
-                        # Re-register tools on new wrapper
-                        for tool in tools:
-                            wrapper.register_tool(tool)
-                        continue
-                # Fallback to interactive selector
-                provider, wrapper = handle_provider(console, session, settings_repo, provider, tools, wrapper)
-                continue
-            if cmd == "/theme":
-                theme = handle_theme(console, settings_repo, theme)
-                console = make_console(theme, use_color=use_color)
-                print(f"Theme switched to {theme}")
-                continue
-            if cmd == "/colors":
-                use_color = handle_colors(console, settings_repo, use_color)
-                console = make_console(theme, use_color=use_color)
-                print(f"Colors {'enabled' if use_color else 'disabled'}")
-                continue
-            if cmd == "/clear":
-                handle_clear(console)
-                continue
-            if cmd == "/exit":
-                handle_exit(console)
-
-            # Default: execute as natural language instruction
+                    console.print(Panel(f"Switched provider to [accent]{provider}[/accent]", title="Provider", box=ROUNDED))
+                    continue
+            # Fallback to interactive selector
             try:
-                # Attempt streaming first; adapter will fall back to non-streaming execute() if unsupported
-                streamed_parts: list[str] = []
-
-                # Build a dedicated console bound directly to the real stdout to avoid prompt_toolkit patching artifacts
-                colorterm = (os.getenv("COLORTERM") or "").lower()
-                color_system = "truecolor" if ("truecolor" in colorterm or "24bit" in colorterm) else "standard"
-                live_console = Console(
-                    theme=console.theme,
-                    no_color=not use_color,
-                    color_system=(color_system if use_color else None),
-                    force_terminal=True,
-                    markup=False,
-                    file=sys.__stdout__,
-                )
-
-                def on_delta(s: str) -> None:
-                    streamed_parts.append(s)
-                    # Update live panel with the latest streamed text and refresh immediately
-                    live.update(Panel("".join(streamed_parts), title="Response (streaming)", box=ROUNDED))
-                    live.refresh()
-
-                with Live(
-                    Panel("", title="Response (streaming)", box=ROUNDED),
-                    refresh_per_second=60,
-                    console=live_console,
-                    transient=True,
-                ) as live:
-                    final = wrapper.stream_and_collect(user_input, on_delta)
-
-                # Render the final, fully formatted result (Reasoning/Response/Tool Call)
-                console.print(Panel(final, title="Response", box=ROUNDED))
+                console.clear()
             except Exception:
-                # Fallback to non-streaming execute on any error
+                pass
+            provider, wrapper = handle_provider(console, session, settings_repo, provider, tools, wrapper)
+            continue
+        if cmd == "/theme":
+            theme = handle_theme(console, settings_repo, theme)
+            console = make_console(theme, use_color=use_color)
+            try:
+                console.clear()
+            except Exception:
+                pass
+            console.print(Panel(f"Theme switched to [accent]{theme}[/accent]", title="Theme", box=ROUNDED))
+            continue
+        if cmd == "/colors":
+            use_color = handle_colors(console, settings_repo, use_color)
+            console = make_console(theme, use_color=use_color)
+            try:
+                console.clear()
+            except Exception:
+                pass
+            console.print(Panel(f"Colors {'enabled' if use_color else 'disabled'}", title="Colors", box=ROUNDED))
+            continue
+        if cmd == "/clear":
+            handle_clear(console)
+            continue
+        if cmd.startswith("/streamtest"):
+            parts = cmd.split(maxsplit=1)
+            demo_text = parts[1] if len(parts) == 2 else "hello"
+            try:
+                # Clear page before rendering streaming test
                 try:
-                    result = wrapper.execute(user_input)
-                    console.print(Panel(result, title="Response", box=ROUNDED))
-                except Exception as e2:
-                    console.print(Panel(f"Error: {str(e2)}", title="Error", box=ROUNDED))
+                    console.clear()
+                except Exception:
+                    pass
+                # Stream directly to stdout to avoid redraw artifacts
+                out = getattr(sys, "__stdout__", sys.stdout)
+                console.print("[accent]Response (streaming):[/accent]")
+                def _on_delta(s: str) -> None:
+                    out.write(s)
+                    out.flush()
+                final = wrapper.stream_and_collect(demo_text, _on_delta)
+                out.write("\n")
+                out.flush()
+                console.print(Panel(final, title="Response", box=ROUNDED))
+            except Exception as e:
+                console.print(Panel(f"Stream test error: {e}", title="Error", box=ROUNDED))
+            continue
+        if cmd == "/exit":
+            handle_exit(console)
+
+        # Default: execute as natural language instruction
+        try:
+            # Attempt streaming first; adapter will fall back to non-streaming execute() if unsupported
+            streamed_parts: list[str] = []
+
+            # Stream directly to the real stdout to avoid redraw artifacts from prompt_toolkit/Rich Live
+            out = getattr(sys, "__stdout__", sys.stdout)
+            # Page refresh UX: clear the screen before streaming header
+            try:
+                console.clear()
+            except Exception:
+                pass
+            try:
+                out.write("\x1b[2J\x1b[H")  # ANSI clear screen + cursor home
+            except Exception:
+                pass
+            out.write("Response (streaming):\n")
+            out.flush()
+
+            def on_delta(s: str) -> None:
+                streamed_parts.append(s)
+                out.write(s)
+                out.flush()
+
+            # Stream tokens directly; then print a newline so the prompt resumes cleanly
+            final = wrapper.stream_and_collect(user_input, on_delta)
+            out.write("\n")
+            out.flush()
+
+            # Render the final, fully formatted result (Reasoning/Response/Tool Call)
+            try:
+                console.clear()
+            except Exception:
+                pass
+            console.print(Panel(final, title="Response", box=ROUNDED))
+        except Exception:
+            # Fallback to non-streaming execute on any error
+            try:
+                result = wrapper.execute(user_input)
+                console.print(Panel(result, title="Response", box=ROUNDED))
+            except Exception as e2:
+                console.print(Panel(f"Error: {str(e2)}", title="Error", box=ROUNDED))
 
 
 if __name__ == "__main__":

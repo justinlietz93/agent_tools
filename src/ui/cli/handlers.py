@@ -24,6 +24,12 @@ from src.api.di.cli_composition import build_settings_repository, list_models
 
 def list_tools(console: Console, catalog: IToolCatalog) -> None:
     """Render a table of registered tools."""
+    # Page refresh UX: clear screen before rendering a full-page view
+    try:
+        console.clear()
+    except Exception:
+        pass
+
     table = Table(title="Registered Tools", box=ROUNDED)
     table.add_column("Name", no_wrap=True)
     table.add_column("Description")
@@ -38,6 +44,12 @@ def list_tools(console: Console, catalog: IToolCatalog) -> None:
 
 def show_config(console: Console, wrapper: ILLM, provider_name: str) -> None:
     """Display current provider configuration."""
+    # Page refresh UX
+    try:
+        console.clear()
+    except Exception:
+        pass
+
     content = (
         f"Provider: {provider_name}\n"
         f"Base URL: {getattr(wrapper, 'base_url', '')}\n"
@@ -48,6 +60,12 @@ def show_config(console: Console, wrapper: ILLM, provider_name: str) -> None:
 
 def show_help(console: Console) -> None:
     """Print help panel."""
+    # Page refresh UX
+    try:
+        console.clear()
+    except Exception:
+        pass
+
     console.print(
         Panel(
             "Commands\n"
@@ -83,6 +101,12 @@ def _registry_provider_key(provider: str) -> Optional[str]:
 
 
 def _render_models_table(console: Console, models: List[object]) -> None:
+    # Page refresh UX
+    try:
+        console.clear()
+    except Exception:
+        pass
+
     table = Table(title="Available Models", box=ROUNDED)
     table.add_column("ID")
     table.add_column("Name")
@@ -201,9 +225,17 @@ def handle_auth(console: Console, session, repo: SettingsRepository, provider: s
 def handle_prefs(console: Console, repo: SettingsRepository) -> None:
     """Handle /prefs command."""
     try:
+        try:
+            console.clear()
+        except Exception:
+            pass
         data = {"prefs": repo.all_prefs(), "api_keys": list(repo.all_api_keys().keys())}
         console.print(Panel(json.dumps(data, ensure_ascii=False, indent=2), title="Preferences", box=ROUNDED))
     except Exception as e:
+        try:
+            console.clear()
+        except Exception:
+            pass
         console.print(Panel(f"Failed to load prefs: {e}", title="Preferences", box=ROUNDED))
 
 

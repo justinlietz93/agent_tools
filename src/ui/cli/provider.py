@@ -18,6 +18,11 @@ from src.interfaces.repositories.settings_repository import SettingsRepository
 
 def select_provider(console, session) -> str:
     """Prompt to select a provider."""
+    # Page refresh UX: clear screen before rendering provider menu
+    try:
+        console.clear()
+    except Exception:
+        pass
     console.print(
         Panel(
             "Select Provider\n\n"
