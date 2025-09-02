@@ -31,6 +31,9 @@ from __future__ import annotations
 import os
 import sys
 import json
+import subprocess
+import shutil
+import shlex
 from getpass import getpass
 from typing import Optional, Tuple, List
 
@@ -50,6 +53,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.theme import Theme
 from rich.box import ROUNDED
+from rich.live import Live
 
 from .console import make_console
 from .provider import select_provider, instantiate_wrapper
@@ -65,16 +69,55 @@ from src.interfaces.repositories.settings_repository import SettingsRepository
 
 def run() -> None:
     """Main interactive loop."""
+    # Optional: launch in a dedicated terminal window to ensure full ANSI support.
+    # Enabled by default unless CLI_SPAWN_TERMINAL is set to 0/false.
+    try:
+        spawn_flag = (os.getenv("CLI_SPAWN_TERMINAL") or "1").lower() in ("1", "true", "yes", "on")
+        if not os.getenv("CLI_CHILD") and spawn_flag:
+            PROJECT_ROOT = os.path.abspath(os.path.join(CURRENT_DIR, "..", "..", ".."))
+            # Ensure we execute from the project root so `python -m src.ui.cli.app` resolves correctly.
+            # On failure, keep the child window open for inspection.
+            cmd = f'cd "{PROJECT_ROOT}" && {shlex.quote(sys.executable)} -m src.ui.cli.app || {{ echo "CLI exited with status $?" ; read -n 1 -s -r -p "Press any key to close"; }}'
+            candidates = [
+                ("gnome-terminal", ["gnome-terminal", "--", "bash", "-lc", cmd]),
+                ("wezterm", ["wezterm", "start", "--", "bash", "-lc", cmd]),
+                ("kitty", ["kitty", "bash", "-lc", cmd]),
+                ("alacritty", ["alacritty", "-e", "bash", "-lc", cmd]),
+                ("konsole", ["konsole", "-e", "bash", "-lc", cmd]),
+                ("tilix", ["tilix", "-e", "bash", "-lc", cmd]),
+                ("xfce4-terminal", ["xfce4-terminal", "-e", "bash", "-lc", cmd]),
+                ("xterm", ["xterm", "-e", "bash", "-lc", cmd]),
+                ("foot", ["foot", "bash", "-lc", cmd]),
+            ]
+            for name, argv in candidates:
+                if shutil.which(name):
+                    env = os.environ.copy()
+                    env["CLI_CHILD"] = "1"
+                    # Hint truecolor for better rendering if not already set
+                    if os.getenv("COLORTERM") is None:
+                        env["COLORTERM"] = "truecolor"
+                    subprocess.Popen(argv, env=env, cwd=PROJECT_ROOT)
+                    return  # Parent exits; child runs CLI in dedicated terminal
+    except Exception:
+        # If terminal spawn fails, continue in current terminal
+        pass
+
     settings_repo: SettingsRepository = build_settings_repository()
 
-    # Theme and color policy (ENV overrides DB, then defaults)
+    # Theme and color policy (ENV overrides DB; default ON in TTY/truecolor terminals)
     theme = (os.getenv("CLI_THEME") or (settings_repo.get_pref("cli_theme") or "dark")).lower()
-    # Conservative default: disable colors unless explicitly enabled
     use_color_env = os.getenv("CLI_COLOR")
     if use_color_env is not None:
         use_color = use_color_env.lower() in ("1", "true", "yes", "on")
     else:
-        use_color = (settings_repo.get_pref("cli_color") or "").lower() in ("1", "true", "yes", "on")
+        pref = str(settings_repo.get_pref("cli_color") or "").lower()
+        if pref in ("1", "true", "yes", "on"):
+            use_color = True
+        elif pref in ("0", "false", "no", "off"):
+            use_color = False
+        else:
+            # Auto-detect: prefer color when attached to a TTY or COLORTERM is set
+            use_color = sys.stdout.isatty() or sys.stderr.isatty() or bool(os.getenv("COLORTERM"))
     console = make_console("light" if theme in ("light", "white") else "dark", use_color=use_color)
     session = PromptSession(history=InMemoryHistory())
 
@@ -173,7 +216,27 @@ def run() -> None:
             if cmd == "/prefs":
                 handle_prefs(console, settings_repo)
                 continue
-            if cmd == "/provider":
+            if cmd.startswith("/provider"):
+                parts = cmd.split(maxsplit=1)
+                if len(parts) == 2 and parts[1].strip():
+                    requested = parts[1].strip().lower()
+                    if requested in {"deepseek", "ollama", "openai", "custom"}:
+                        # Direct provider switch without interactive prompt
+                        provider = requested
+                        wrapper = instantiate_wrapper(provider, console, session, repo=settings_repo)
+                        try:
+                            settings_repo.set_pref("last_provider", provider)
+                        except Exception:
+                            pass
+                        # Restore model if available
+                        saved_model = settings_repo.get_pref(f"model.{provider}")
+                        if saved_model:
+                            wrapper.model = saved_model
+                        # Re-register tools on new wrapper
+                        for tool in tools:
+                            wrapper.register_tool(tool)
+                        continue
+                # Fallback to interactive selector
                 provider, wrapper = handle_provider(console, session, settings_repo, provider, tools, wrapper)
                 continue
             if cmd == "/theme":
@@ -194,10 +257,44 @@ def run() -> None:
 
             # Default: execute as natural language instruction
             try:
-                result = wrapper.execute(user_input)
-                console.print(Panel(result, title="Response", box=ROUNDED))
-            except Exception as e:
-                console.print(Panel(f"Error: {str(e)}", title="Error", box=ROUNDED))
+                # Attempt streaming first; adapter will fall back to non-streaming execute() if unsupported
+                streamed_parts: list[str] = []
+
+                # Build a dedicated console bound directly to the real stdout to avoid prompt_toolkit patching artifacts
+                colorterm = (os.getenv("COLORTERM") or "").lower()
+                color_system = "truecolor" if ("truecolor" in colorterm or "24bit" in colorterm) else "standard"
+                live_console = Console(
+                    theme=console.theme,
+                    no_color=not use_color,
+                    color_system=(color_system if use_color else None),
+                    force_terminal=True,
+                    markup=False,
+                    file=sys.__stdout__,
+                )
+
+                def on_delta(s: str) -> None:
+                    streamed_parts.append(s)
+                    # Update live panel with the latest streamed text and refresh immediately
+                    live.update(Panel("".join(streamed_parts), title="Response (streaming)", box=ROUNDED))
+                    live.refresh()
+
+                with Live(
+                    Panel("", title="Response (streaming)", box=ROUNDED),
+                    refresh_per_second=60,
+                    console=live_console,
+                    transient=True,
+                ) as live:
+                    final = wrapper.stream_and_collect(user_input, on_delta)
+
+                # Render the final, fully formatted result (Reasoning/Response/Tool Call)
+                console.print(Panel(final, title="Response", box=ROUNDED))
+            except Exception:
+                # Fallback to non-streaming execute on any error
+                try:
+                    result = wrapper.execute(user_input)
+                    console.print(Panel(result, title="Response", box=ROUNDED))
+                except Exception as e2:
+                    console.print(Panel(f"Error: {str(e2)}", title="Error", box=ROUNDED))
 
 
 if __name__ == "__main__":

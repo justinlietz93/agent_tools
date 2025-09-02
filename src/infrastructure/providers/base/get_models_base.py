@@ -7,7 +7,7 @@ This module provides helpers shared by provider-specific "get models" scripts:
 - Loading cached snapshots when online refresh fails
 
 Intended usage (inside provider script):
-    from src.providers.base.get_models_base import save_provider_models, load_cached_models
+    from src.infrastructure.providers.base.get_models_base import save_provider_models, load_cached_models
     items = fetch_from_api()  # list of dicts/SDK objects
     save_provider_models("openai", items, fetched_via="api", metadata={"source": "openai_api"})
 """

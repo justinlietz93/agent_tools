@@ -270,3 +270,69 @@ class OpenAICompatibleWrapper(LLMWrapper):
 
         except Exception as e:
             return f"Error executing tool: {str(e)}"
+
+    def stream_and_collect(self, user_input: str, on_delta) -> str:
+        """
+        Stream tokens via OpenAI-compatible Chat Completions and emit deltas using on_delta.
+        Returns the same final formatted string as execute().
+        """
+        try:
+            system_prompt = self._create_system_prompt()
+
+            # Stream text deltas
+            stream = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_input},
+                ],
+                stream=True,
+            )
+
+            content_parts: list[str] = []
+            try:
+                for chunk in stream:
+                    try:
+                        # OpenAI-compatible delta shape
+                        delta = chunk.choices[0].delta
+                        piece = getattr(delta, "content", None)
+                        if piece:
+                            s = str(piece)
+                            on_delta(s)
+                            content_parts.append(s)
+                    except Exception:
+                        # Be robust to variant SDK shapes
+                        pass
+            except Exception:
+                # If streaming iteration fails, fall back to non-streaming
+                pass
+
+            content = "".join(content_parts)
+            # Infer reasoning and handle tool-call path exactly like execute()
+            reasoning = self._infer_reasoning(content, None)
+
+            tool_call = self._extract_tool_call(content)
+            if not tool_call:
+                content_str = (content or "").strip()
+                if content_str:
+                    reasoning_str = (reasoning or "").strip()
+                    if reasoning_str == content_str:
+                        reasoning_str = ""
+                    return f"Reasoning:\n{reasoning_str}\n\nResponse:\n{content_str}"
+                else:
+                    return f"Reasoning:\n{(reasoning or '').strip()}\n\nNo valid tool call was made."
+
+            tool_name = tool_call.get("tool")
+            params = tool_call.get("input_schema", {}) or {}
+            if not tool_name or tool_name not in self.tools:
+                return f"Reasoning:\n{reasoning}\n\nError: Tool '{tool_name}' not found."
+
+            tool: Tool = self.tools[tool_name]["tool"]  # type: ignore[assignment]
+            result = tool.run(params)
+            return (
+                f"Reasoning:\n{reasoning}\n\n"
+                f"Tool Call:\n{json.dumps(tool_call, indent=2)}\n\n"
+                f"Result:\n{result}"
+            )
+        except Exception as e:
+            return f"Error executing tool: {str(e)}"

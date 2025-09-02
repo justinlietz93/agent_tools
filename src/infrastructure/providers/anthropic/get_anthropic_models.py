@@ -20,8 +20,8 @@ try:
 except Exception:
     anthropic = None  # type: ignore
 
-from src.providers.base.get_models_base import save_provider_models, load_cached_models
-from src.providers.base.repositories.keys import KeysRepository
+from src.infrastructure.providers.base.get_models_base import save_provider_models, load_cached_models
+from src.infrastructure.providers.base.repositories.keys import KeysRepository
 
 
 PROVIDER = "anthropic"

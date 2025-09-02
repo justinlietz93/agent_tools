@@ -48,16 +48,16 @@ class ProviderFactory:
     # Map canonical provider names to import paths and class names
     _PROVIDERS: Dict[str, Dict[str, str]] = {
         "openai": {
-            "module": "src.providers.openai.client",
+            "module": "src.infrastructure.providers.openai.client",
             "class": "OpenAIProvider",
         },
         # Future entries:
-        # "anthropic": {"module": "src.providers.anthropic.client", "class": "AnthropicProvider"},
-        # "deepseek": {"module": "src.providers.deepseek.client", "class": "DeepseekProvider"},
-        # "gemini": {"module": "src.providers.gemini.client", "class": "GeminiProvider"},
-        # "xai": {"module": "src.providers.xai.client", "class": "XAIProvider"},
-        # "openrouter": {"module": "src.providers.openrouter.client", "class": "OpenRouterProvider"},
-        # "ollama": {"module": "src.providers.ollama.client", "class": "OllamaProvider"},
+        # "anthropic": {"module": "src.infrastructure.providers.anthropic.client", "class": "AnthropicProvider"},
+        # "deepseek": {"module": "src.infrastructure.providers.deepseek.client", "class": "DeepseekProvider"},
+        # "gemini": {"module": "src.infrastructure.providers.gemini.client", "class": "GeminiProvider"},
+        # "xai": {"module": "src.infrastructure.providers.xai.client", "class": "XAIProvider"},
+        # "openrouter": {"module": "src.infrastructure.providers.openrouter.client", "class": "OpenRouterProvider"},
+        # "ollama": {"module": "src.infrastructure.providers.ollama.client", "class": "OllamaProvider"},
     }
 
     @classmethod

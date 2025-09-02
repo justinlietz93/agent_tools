@@ -22,23 +22,23 @@ import json
 import time
 from typing import Optional, List
 
-from src.providers.base.interfaces import (
+from src.infrastructure.providers.base.interfaces import (
     LLMProvider,
     SupportsJSONOutput,
     SupportsResponsesAPI,
     ModelListingProvider,
     HasDefaultModel,
 )
-from src.providers.base.models import (
+from src.infrastructure.providers.base.models import (
     ChatRequest,
     ChatResponse,
     ProviderMetadata,
     Message,
     ContentPart,
 )
-from src.providers.base.repositories.model_registry import ModelRegistryRepository
-from src.providers.model_config import get_openai_config
-from src.providers.openai_client import call_openai_with_retry
+from src.infrastructure.providers.base.repositories.model_registry import ModelRegistryRepository
+from src.infrastructure.providers.model_config import get_openai_config
+from src.infrastructure.providers.openai_client import call_openai_with_retry
 
 
 class OpenAIProvider(LLMProvider, SupportsJSONOutput, SupportsResponsesAPI, ModelListingProvider, HasDefaultModel):

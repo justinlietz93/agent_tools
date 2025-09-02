@@ -2,7 +2,7 @@
 Settings repository port. Infra implements (e.g., SQLite).
 """
 from __future__ import annotations
-from typing import Protocol, Optional
+from typing import Protocol, Optional, Dict
 
 class SettingsRepository(Protocol):
     def get_api_key(self, provider: str) -> Optional[str]:
@@ -20,6 +20,13 @@ class SettingsRepository(Protocol):
     def get_colors_enabled(self) -> bool:
         ...
     def set_colors_enabled(self, enabled: bool) -> None:
+        ...
+    # Generic preferences (used by CLI and features like streaming)
+    def get_pref(self, key: str) -> Optional[str]:
+        ...
+    def set_pref(self, key: str, value: Optional[str]) -> None:
+        ...
+    def all_prefs(self) -> Dict[str, str]:
         ...
 
 __all__ = ["SettingsRepository"]

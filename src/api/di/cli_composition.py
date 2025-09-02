@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from src.infrastructure.llm.adapter import LLMWrapperAdapter
-from src.providers.base.repositories.keys import KeysRepository
+from src.infrastructure.providers.base.repositories.keys import KeysRepository
 
 if TYPE_CHECKING:
     from src.interfaces.repositories.settings_repository import SettingsRepository
@@ -53,19 +53,19 @@ def list_models(provider: str) -> list[str]:
     """
     provider = (provider or "").lower().strip()
     if provider == "ollama":
-        from src.providers.ollama.get_ollama_models import get_models
+        from src.infrastructure.providers.ollama.get_ollama_models import get_models
         models = get_models()
     elif provider == "openai":
-        from src.providers.openai.get_openai_models import get_models
+        from src.infrastructure.providers.openai.get_openai_models import get_models
         models = get_models()
     elif provider == "deepseek":
-        from src.providers.deepseek.get_deepseek_models import get_models
+        from src.infrastructure.providers.deepseek.get_deepseek_models import get_models
         models = get_models()
     elif provider == "gemini":
-        from src.providers.gemini.get_gemini_models import get_models
+        from src.infrastructure.providers.gemini.get_gemini_models import get_models
         models = get_models()
     elif provider == "xai":
-        from src.providers.xai.get_xai_models import get_models
+        from src.infrastructure.providers.xai.get_xai_models import get_models
         models = get_models()
     else:
         models = []
@@ -88,7 +88,7 @@ def build_illm_via_providers(provider: str, model: str | None, settings: "Settin
         api_key = keys_repo.get_resolution(provider).api_key
 
     # Create provider client
-    from src.providers.base.factory import create_provider
+    from src.infrastructure.providers.base.factory import create_provider
     client = create_provider(provider, model=model, api_key=api_key, base_url=base_url)
     return LLMWrapperAdapter(client)
 

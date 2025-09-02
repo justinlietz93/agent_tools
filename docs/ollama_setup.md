@@ -101,3 +101,5 @@ print(result)
 - CLI shows no color:
   - Your terminal may not support ANSI colors
   - Try another terminal or disable color in your emulator
+
+  

@@ -46,5 +46,19 @@ class LLMWrapperAdapter(ILLM):
     def execute(self, user_input: str) -> str:
         return self.wrapper.execute(user_input)
 
+    def stream_and_collect(self, user_input: str, on_delta) -> str:
+        """
+        If the underlying wrapper supports streaming, forward to it while emitting deltas via on_delta.
+        Otherwise, fall back to non-streaming execute().
+        """
+        try:
+            target = getattr(self, "wrapper", None)
+            if target is not None and hasattr(target, "stream_and_collect"):
+                return target.stream_and_collect(user_input, on_delta)
+        except Exception:
+            pass
+        # Fallback
+        return self.execute(user_input)
+
     def register_tool(self, tool: "ITool") -> None:
         self.wrapper.register_tool(tool)

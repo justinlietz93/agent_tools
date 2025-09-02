@@ -1,0 +1,190 @@
+{
+  "provider": "ollama",
+  "models": [
+    {
+      "id": "gpt-oss:20b",
+      "name": "gpt-oss:20b",
+      "provider": "ollama",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "mxbai-embed-large:latest",
+      "name": "mxbai-embed-large:latest",
+      "provider": "ollama",
+      "family": "mxbai",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "gpt-oss:120b",
+      "name": "gpt-oss:120b",
+      "provider": "ollama",
+      "family": "gpt",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "qwen3:30b-a3b",
+      "name": "qwen3:30b-a3b",
+      "provider": "ollama",
+      "family": "qwen3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "qwen3:8b",
+      "name": "qwen3:8b",
+      "provider": "ollama",
+      "family": "qwen3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "deepseek-r1:8b",
+      "name": "deepseek-r1:8b",
+      "provider": "ollama",
+      "family": "deepseek",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "PetrosStav/gemma3-tools:27b",
+      "name": "PetrosStav/gemma3-tools:27b",
+      "provider": "ollama",
+      "family": "petrosstav/gemma3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "bge-m3:latest",
+      "name": "bge-m3:latest",
+      "provider": "ollama",
+      "family": "bge",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "qwen3:0.6b",
+      "name": "qwen3:0.6b",
+      "provider": "ollama",
+      "family": "qwen3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "nomic-embed-text:latest",
+      "name": "nomic-embed-text:latest",
+      "provider": "ollama",
+      "family": "nomic",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "qwen3:235b-a22b",
+      "name": "qwen3:235b-a22b",
+      "provider": "ollama",
+      "family": "qwen3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "qwen3:32b",
+      "name": "qwen3:32b",
+      "provider": "ollama",
+      "family": "qwen3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "phi4:latest",
+      "name": "phi4:latest",
+      "provider": "ollama",
+      "family": "phi4",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "deepseek-r1:32b",
+      "name": "deepseek-r1:32b",
+      "provider": "ollama",
+      "family": "deepseek",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "deepseek-r1:70b",
+      "name": "deepseek-r1:70b",
+      "provider": "ollama",
+      "family": "deepseek",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "gemma3n:e4b",
+      "name": "gemma3n:e4b",
+      "provider": "ollama",
+      "family": "gemma3n",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "phi3:mini",
+      "name": "phi3:mini",
+      "provider": "ollama",
+      "family": "phi3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "ingu627/llama4-scout-q4:109b",
+      "name": "ingu627/llama4-scout-q4:109b",
+      "provider": "ollama",
+      "family": "ingu627/llama4",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "nemotron:70b",
+      "name": "nemotron:70b",
+      "provider": "ollama",
+      "family": "nemotron",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    },
+    {
+      "id": "gemma3:4b",
+      "name": "gemma3:4b",
+      "provider": "ollama",
+      "family": "gemma3",
+      "context_length": null,
+      "capabilities": {},
+      "updated_at": null
+    }
+  ],
+  "fetched_at": "2025-09-02T00:04:30.622307+00:00",
+  "fetched_via": "ollama_list",
+  "metadata": {
+    "source": "ollama_cli"
+  }
+}

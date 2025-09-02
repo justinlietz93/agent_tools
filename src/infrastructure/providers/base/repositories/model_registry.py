@@ -128,7 +128,7 @@ class ModelRegistryRepository:
         Try to refresh using a provider-specific module. Non-fatal on error.
 
         Expected module path pattern:
-          src.providers.{provider}.get_{provider}_models
+          src.infrastructure.providers.{provider}.get_{provider}_models
 
         Expected callable names (first found is used):
           - refresh_models()
@@ -154,14 +154,14 @@ class ModelRegistryRepository:
             raise ModelRegistryError(f"No refresh entry point found for provider '{provider}'")
 
     def _try_provider_refresh_module(self, provider: str) -> bool:
-        module_name = f"src.providers.{provider}.get_{provider}_models"
+        module_name = f"src.infrastructure.providers.{provider}.get_{provider}_models"
         try:
             mod = import_module(module_name)
         except Exception:
             # Try package-local (when executed from within providers)
             try:
                 module_name_local = f".{provider}.get_{provider}_models"
-                mod = import_module(module_name_local, package="src.providers")
+                mod = import_module(module_name_local, package="src.infrastructure.providers")
             except Exception:
                 return False
 
