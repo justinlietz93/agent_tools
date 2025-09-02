@@ -181,7 +181,7 @@ def get_claude_response(system_prompt: str, user_message: str, tools: list) -> d
     ]
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=messages,
@@ -367,7 +367,7 @@ def test_error_handling_integration(requests_tool):
     # Send error back to Claude
     client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy_key"))
     final_response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=[
@@ -457,7 +457,7 @@ def test_basic_get_request_system(requests_tool):
     print("\n=== Sending Result to Claude ===")
     client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy_key"))
     final_response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=[
@@ -528,7 +528,7 @@ def test_error_handling_system(requests_tool):
     print("\n=== Sending Error to Claude ===")
     client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", "dummy_key"))
     final_response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=[

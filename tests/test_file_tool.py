@@ -40,7 +40,7 @@ def get_claude_response(client, system_prompt, user_message, tools):
         tool_configs.append(tool_config)
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         temperature=0,
         system=system_prompt,

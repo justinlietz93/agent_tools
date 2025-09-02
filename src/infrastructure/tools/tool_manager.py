@@ -1,5 +1,6 @@
 # selfprompter/tools/tool_manager.py
 
+import os
 from typing import Dict, Any, List, Type
 from .tool_base import Tool
 
@@ -13,10 +14,14 @@ from .package_manager_tool import PackageManagerTool
 from .advanced_file_tool import AdvancedFileTool
 from .code_runner_tool import CodeRunnerTool
 
+# Optional: DocCheckTool is registered conditionally based on Context7 availability or env gate
+from .mcp_tools.doc_check_tool import DocCheckTool  # type: ignore
+
+
 class ToolManager:
     """
     Manages a collection of tools and handles tool registration and execution.
-    Follows Anthropic Claude tool use standards.
+    
     """
 
     def __init__(self, register_defaults: bool = True):
@@ -44,6 +49,31 @@ class ToolManager:
         ]
         for tool in default_tools:
             self.register_tool(tool)
+
+        # Feature-gated registration for DocCheckTool (Context7 client)
+        self._maybe_register_doc_tool()
+
+    def _maybe_register_doc_tool(self) -> None:
+        """
+        Register DocCheckTool if:
+        - CONTEXT7_ENABLE_DOC_TOOL in {"1","true","yes","on"} OR
+        - Context7 client health_check() is True at startup.
+        """
+        gate = (os.getenv("CONTEXT7_ENABLE_DOC_TOOL", "") or "").strip().lower()
+        if gate in {"1", "true", "yes", "on"}:
+            # Register with a lazy client (constructor injection handled by tool if None)
+            self.register_tool(DocCheckTool())
+            return
+
+        # Auto-enable if reachable
+        try:
+            from src.infrastructure.mcp.context7_client import Context7MCPClient  # lazy import
+            client = Context7MCPClient()
+            if client.health_check(timeout=1.5):
+                self.register_tool(DocCheckTool(context7_client=client))
+        except Exception:
+            # Unreachable or client import failure -> remain hidden
+            pass
 
     def register_tool(self, tool: Tool) -> None:
         """
@@ -116,5 +146,3 @@ class ToolManager:
         """
         tool = self.get_tool(name)
         return tool.run(tool_call_id, **kwargs)
-
-    

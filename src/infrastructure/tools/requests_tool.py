@@ -7,7 +7,7 @@ from .tool_base import Tool, ToolResult
 class RequestsTool(Tool):
     """
     Tool for making HTTP requests.
-    Follows Anthropic Claude tool use standards.
+    
     """
 
     def __init__(self, default_headers: Optional[Dict[str, str]] = None):

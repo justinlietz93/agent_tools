@@ -156,11 +156,108 @@ class OpenAICompatibleWrapper(LLMWrapper):
         chunks.append('Example output shape (choose valid tool): {"tool":"file","input_schema":{"operation":"read","path":"..."} }')
         return "\n".join(chunks)
 
+    def _build_openai_tools(self) -> list[dict]:
+        """
+        Build OpenAI-compatible tools array from registered tools.
+        """
+        defs: list[dict] = []
+        for name, info in self.tools.items():
+            raw_schema = info.get("raw_schema") or {}
+            desc = info.get("description") or ""
+            defs.append({
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "description": desc,
+                    "parameters": raw_schema,
+                },
+            })
+        return defs
+
+    def _is_ollama_openai_compat(self) -> bool:
+        """
+        Heuristic: detect Ollama when using its OpenAI-compatible /v1 endpoint.
+        Avoids setting OpenAI-only fields that Ollama may not accept.
+        """
+        base = (self.base_url or "").lower()
+        return "ollama" in base or ":11434" in base
+
+    def _supports_response_format_json(self) -> bool:
+        # Disable for Ollama OpenAI-compatible endpoints and any unknown that may reject it
+        return not self._is_ollama_openai_compat()
+
+    def _supports_tool_choice(self) -> bool:
+        # Disable for Ollama OpenAI-compatible endpoints to prefer native Harmony path instead
+        return not self._is_ollama_openai_compat()
+
+    def _parse_args_safely(self, raw: Any) -> Dict[str, Any]:
+        """
+        Convert function call arguments to a dict robustly:
+        - dict passthrough
+        - JSON string (with or without ``` fences)
+        - Extract first balanced {...} object from a string if needed
+        """
+        if isinstance(raw, dict):
+            return raw
+        if isinstance(raw, str):
+            text = raw.strip()
+            if text.startswith("```"):
+                end = text.find("```", 3)
+                if end != -1:
+                    text = text[3:end].strip()
+            try:
+                obj = json.loads(text)
+                return obj if isinstance(obj, dict) else {}
+            except Exception:
+                start = text.find("{")
+                while start != -1:
+                    depth = 0
+                    for i in range(start, len(text)):
+                        ch = text[i]
+                        if ch == "{":
+                            depth += 1
+                        elif ch == "}":
+                            depth -= 1
+                            if depth == 0:
+                                candidate = text[start:i+1]
+                                try:
+                                    obj = json.loads(candidate)
+                                    if isinstance(obj, dict):
+                                        return obj
+                                except Exception:
+                                    pass
+                                break
+                    start = text.find("{", start + 1)
+        return {}
+
+    def _adapt_openai_tool_calls(self, tool_calls: Any) -> Optional[Dict[str, Any]]:
+        """
+        Adapt OpenAI native message.tool_calls into our internal {'tool','input_schema'} shape.
+        """
+        try:
+            for call in (tool_calls or []):
+                fn = getattr(call, "function", None) or (call.get("function") if isinstance(call, dict) else {})
+                raw_name = ""
+                raw_args = None
+                if isinstance(fn, dict):
+                    raw_name = str(fn.get("name") or "")
+                    raw_args = fn.get("arguments")
+                else:
+                    raw_name = str(getattr(fn, "name", "") or "")
+                    raw_args = getattr(fn, "arguments", None)
+                name = raw_name.split(".")[-1] if "." in raw_name else raw_name
+                args = self._parse_args_safely(raw_args)
+                if name and name in self.tools:
+                    return {"tool": name, "input_schema": args}
+        except Exception:
+            pass
+        return None
     def _infer_reasoning(self, content: str, reasoning_content: Optional[str]) -> str:
         """
         Prefer provider-supplied 'reasoning_content' (DeepSeek), else infer
         from content before TOOL_CALL or fall back to entire content.
         """
+        # TODO Need to also check for thinking streams from other providers
         if reasoning_content:
             return reasoning_content
 
@@ -226,13 +323,21 @@ class OpenAICompatibleWrapper(LLMWrapper):
         try:
             system_prompt = self._create_system_prompt()
 
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
+            payload = {
+                "model": self.model,
+                "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_input},
                 ],
-            )
+            }
+            # Provider-safe JSON/tool-call enforcement for non-streaming requests
+            if self.tools:
+                payload["tools"] = self._build_openai_tools()
+                if self._supports_tool_choice():
+                    payload["tool_choice"] = "required"
+                if self._supports_response_format_json():
+                    payload["response_format"] = {"type": "json_object"}
+            response = self.client.chat.completions.create(**payload)
 
             # OpenAI-compatible response structure
             message = response.choices[0].message
@@ -240,6 +345,29 @@ class OpenAICompatibleWrapper(LLMWrapper):
             # DeepSeek-specific extension (present only on deepseek-reasoner)
             reasoning_content = getattr(message, "reasoning_content", None)
             reasoning = self._infer_reasoning(content, reasoning_content)
+
+            # Prefer native tool_calls if present
+            try:
+                tool_call_native = self._adapt_openai_tool_calls(
+                    getattr(message, "tool_calls", None)
+                    or (message.get("tool_calls") if isinstance(message, dict) else None)
+                )
+            except Exception:
+                tool_call_native = None
+
+            if tool_call_native:
+                tool_name = tool_call_native.get("tool")
+                params = tool_call_native.get("input_schema", {}) or {}
+                if not tool_name or tool_name not in self.tools:
+                    return f"Reasoning:\n{reasoning}\n\nError: Tool '{tool_name}' not found."
+
+                tool: Tool = self.tools[tool_name]["tool"]  # type: ignore[assignment]
+                result = tool.run(params)
+                return (
+                    f"Reasoning:\n{reasoning}\n\n"
+                    f"Tool Call:\n{json.dumps(tool_call_native, indent=2)}\n\n"
+                    f"Result:\n{result}"
+                )
 
             tool_call = self._extract_tool_call(content)
             if not tool_call:

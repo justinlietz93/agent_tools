@@ -6,7 +6,7 @@ Verifies that Claude can properly understand and use the tool for documentation 
 import os
 import pytest
 from unittest.mock import Mock, patch
-from src.infrastructure.tools.doc_check_tool import DocCheckTool
+from src.infrastructure.tools.mcp_tools.doc_check_tool import DocCheckTool
 from anthropic import Anthropic
 import tempfile
 import shutil
@@ -49,7 +49,7 @@ def claude_client():
 def get_claude_response(client, system_prompt, user_message, tools):
     """Get response from Claude with tool definitions."""
     return client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         system=system_prompt,
         messages=[{"role": "user", "content": user_message}],
         tools=tools,

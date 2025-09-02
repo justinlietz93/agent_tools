@@ -64,6 +64,9 @@ coverage.xml
 local_settings.py
 db.sqlite3
 *.db
+DEV/
+DEV-DOCS/
+code_crawler_results/
 
 
 #Ignore vscode AI rules

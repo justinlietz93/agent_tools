@@ -112,7 +112,6 @@ class CodeRunnerTool(Tool):
     """
     Advanced tool for executing complex code projects in various languages.
     Supports multi-file projects, dependencies, and build steps.
-    Follows Anthropic Claude tool use standards.
     """
 
     name: Literal["code_runner"] = "code_runner"

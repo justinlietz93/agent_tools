@@ -8,7 +8,7 @@ import os
 import pytest
 from typing import Dict, Any
 from anthropic import Anthropic
-from src.infrastructure.tools.doc_check_tool import DocCheckTool
+from src.infrastructure.tools.mcp_tools.doc_check_tool import DocCheckTool
 from src.infrastructure.tools.config import Config
 
 # Load config with API keys
@@ -57,7 +57,7 @@ def get_claude_response(system_prompt: str, user_message: str, tools: list) -> d
     ]
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=messages,

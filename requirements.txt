@@ -15,6 +15,7 @@ openai>=1.0.0  # For Deepseek API compatibility
 
 # Additional testing
 pytest-asyncio>=0.21.0  # For async test support
+responses>=0.25.6       # For HTTP request mocking in tests
 
 # Additional computer tool dependencies
 pywin32>=306; platform_system=="Windows"  # For Windows-specific functionality

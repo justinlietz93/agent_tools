@@ -4,7 +4,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.infrastructure.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.llm.deepseek_wrapper import DeepseekToolWrapper
 from src.infrastructure.tools.computer_tool import ComputerTool
 import time
 

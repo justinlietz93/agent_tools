@@ -75,7 +75,7 @@ def get_claude_response(system_prompt: str, user_message: str, tools: list) -> d
     ]
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=messages,
@@ -112,7 +112,7 @@ def test_basic_python_execution_llm(client, code_runner, tool_definition):
     
     # 1. Make initial request to Claude
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -138,7 +138,7 @@ def test_basic_python_execution_llm(client, code_runner, tool_definition):
     
     # 4. Send result back to Claude
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -163,7 +163,7 @@ def test_python_with_args_llm(client, code_runner, tool_definition):
     """Test that Claude can use the code runner tool with command line arguments"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -183,7 +183,7 @@ def test_python_with_args_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -208,7 +208,7 @@ def test_python_with_dependencies_llm(client, code_runner, tool_definition):
     """Test that Claude can create and run a project with dependencies"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -226,7 +226,7 @@ def test_python_with_dependencies_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -250,7 +250,7 @@ def test_typescript_project_llm(client, code_runner, tool_definition):
     """Test that Claude can create and run a TypeScript project"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -268,7 +268,7 @@ def test_typescript_project_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -292,7 +292,7 @@ def test_error_handling_llm(client, code_runner, tool_definition):
     """Test that Claude properly handles execution errors"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -310,7 +310,7 @@ def test_error_handling_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -334,7 +334,7 @@ def test_timeout_handling_llm(client, code_runner, tool_definition):
     """Test that Claude can handle timeouts properly"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -352,7 +352,7 @@ def test_timeout_handling_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -377,7 +377,7 @@ def test_go_project_llm(client, code_runner, tool_definition):
     """Test that Claude can create and run a Go project"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -398,7 +398,7 @@ def test_go_project_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -423,7 +423,7 @@ def test_rust_project_llm(client, code_runner, tool_definition):
     """Test that Claude can create and run a Rust project"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -444,7 +444,7 @@ def test_rust_project_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -468,7 +468,7 @@ def test_python_with_build_args_llm(client, code_runner, tool_definition):
     """Test that Claude can use build arguments properly"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -489,7 +489,7 @@ def test_python_with_build_args_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -513,7 +513,7 @@ def test_python_with_env_vars_llm(client, code_runner, tool_definition):
     """Test that Claude can use environment variables properly"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -535,7 +535,7 @@ def test_python_with_env_vars_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[
@@ -559,7 +559,7 @@ def test_multi_file_project_llm(client, code_runner, tool_definition):
     """Test that Claude can handle multi-file projects"""
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[{
@@ -581,7 +581,7 @@ def test_multi_file_project_llm(client, code_runner, tool_definition):
     tool_result = code_runner.run(tool_use["input"])
     
     followup = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         tools=[tool_definition],
         messages=[

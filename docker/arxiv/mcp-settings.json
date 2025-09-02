@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "arxiv-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "ARXIV_STORAGE_PATH",
+        "-v",
+        "/local-directory:/local-directory",
+        "mcp/arxiv-mcp-server"
+      ],
+      "env": {
+        "ARXIV_STORAGE_PATH": "/Users/local-test/papers"
+      }
+    }
+  }
+}

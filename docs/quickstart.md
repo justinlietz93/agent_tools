@@ -44,8 +44,8 @@ This will demonstrate Deepseek controlling your system by:
 Deepseek Reasoner understands natural language commands and automatically determines the appropriate tool actions. Simply describe what you want to do:
 
 ```python
-from src.tools.deepseek_wrapper import DeepseekToolWrapper
-from src.tools.computer_tool import ComputerTool
+from src.infrastructure.llm.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.tools.computer_tool import ComputerTool
 
 # Initialize
 wrapper = DeepseekToolWrapper()
@@ -193,3 +193,57 @@ python -m pip install -r requirements.txt
 - [Tool Development Guide](tool_development.md)
 - [API Documentation](https://api-docs.deepseek.com/)
 - [Example Scripts](/examples)
+# Context7 MCP DocCheckTool (First-class)
+
+This project includes a Context7-only documentation check tool that fetches third‑party docs from the Context7 MCP server. It does not read your local files. It validates provider-returned documentation, not your codebase.
+
+Enablement
+
+- Start Context7 MCP (HTTP/SSE):
+  - bun: bun run dist/index.js --transport http --port 8080
+  - Docker (recommended): docker run -d --name context7-mcp -p 8080:8080 -e MCP_TRANSPORT=http mcp/context7:latest
+- Auto-enable vs. opt-in:
+  - Auto: If the server is reachable on startup, the tool registers automatically.
+  - Opt-in: export CONTEXT7_ENABLE_DOC_TOOL=1
+- Base URL override: export CONTEXT7_BASE_URL=http://localhost:8080
+
+Standardized output
+
+All calls return a dict:
+- status: "success" | "error"
+- check_type: "completeness" | "sites" | "links" | "anchors" | "frontmatter"
+- summary: Human-readable
+- data: Provider-native payload and/or analysis
+- base_url: Context7 endpoint used
+
+Usage examples (/call)
+
+- Completeness (library docs)
+  {
+    "tool": "documentation_check",
+    "input_schema": {
+      "check_type": "completeness",
+      "library": "/upstash/context7",
+      "required_sections": ["Introduction", "API Reference"],
+      "tokens": 2000
+    }
+  }
+
+- Sites (multiple libraries)
+  {
+    "tool": "documentation_check",
+    "input_schema": {
+      "check_type": "sites",
+      "libraries": ["react", "vue", "/upstash/context7"],
+      "tokens": 1000
+    }
+  }
+
+Notes
+- links/anchors/frontmatter are currently not supported by Context7 in this adapter. Calls return a structured "error"/"unsupported" with a clear summary.
+- The older DocCheckTool that scanned local files has been replaced. The new tool uses Context7 only and never falls back to LLMs or local parsing.
+
+Tests
+- Anthropic-style LLM tests are skipped by default during collection. Enable them explicitly:
+  export RUN_ANTHROPIC_TESTS=1
+  pytest -q

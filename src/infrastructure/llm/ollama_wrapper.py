@@ -244,6 +244,9 @@ class OllamaWrapper(OpenAICompatibleWrapper):
                 "tools": self._build_ollama_tools(),
                 "stream": False,  # ensure single JSON object (avoid NDJSON 'done' tail)
             }
+            # Enforce pure JSON responses from Ollama when expecting a tool call
+            if self.tools:
+                payload["format"] = "json"
 
             url = f"{self._root_host()}/api/chat"
             headers = {"Content-Type": "application/json", "Accept": "application/json"}

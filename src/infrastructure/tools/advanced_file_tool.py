@@ -5,10 +5,11 @@ import shutil
 from typing import Dict, Any, Optional, List, Union
 from .tool_base import Tool, ToolResult
 
+# TODO We have two file tools, we should determine if we need both.
+
 class AdvancedFileTool(Tool):
     """
     Advanced file and directory operations tool.
-    Follows Anthropic Claude tool use standards.
     """
 
     def __init__(self, repo_root: str = "./"):

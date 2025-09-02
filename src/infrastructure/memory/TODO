@@ -1,0 +1,4 @@
+# Memory todo items
+TODO Add temporally aware dynamic knowledge graph, options are memgraph and cognee
+TODO Connect to qdrant as long term vectorized knowledge
+TODO Connect to redis as short term memory

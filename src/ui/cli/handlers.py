@@ -134,7 +134,7 @@ def show_models(console: Console, provider: str, refresh: bool = False) -> None:
     try:
         models = list_models(provider)
         if not models:
-            console.print("[warning]No models found for this provider.[/warning]")
+            console.print("No models found for this provider.", style="yellow")
             return
         # Create dummy model objects for table rendering
         dummy_models = [{"id": m, "name": m, "family": "-", "updated_at": "-"} for m in models]
@@ -161,7 +161,7 @@ def select_model_interactive(console: Console, session, wrapper: ILLM, provider:
         sel = session.prompt("Model ID: ").strip()
 
     if not sel:
-        console.print("[warning]Model unchanged.[/warning]")
+        console.print("Model unchanged.", style="yellow")
         return
 
     # Assign directly (OpenAICompatibleWrapper reads self.model)
@@ -266,7 +266,7 @@ def handle_clear(console) -> None:
 
 def handle_exit(console) -> None:
     """Handle /exit command."""
-    console.print("\n[warning]Exiting...[/warning]")
+    console.print("\nExiting...", style="yellow")
     sys.exit(0)
 
 

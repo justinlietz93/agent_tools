@@ -1,6 +1,5 @@
 # selfprompter/tools/tool_base.py
 """
-Base classes for Anthropic Claude tool implementation.
 Based on: https://docs.anthropic.com/claude/docs/tool-use
 """
 
@@ -23,7 +22,6 @@ class ToolResult(TypedDict):
 
 class Tool(ABC):
     """
-    Abstract base class for tools following Anthropic Claude standards.
     See: https://docs.anthropic.com/claude/docs/tool-use
     """
     

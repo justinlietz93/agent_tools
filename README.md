@@ -101,8 +101,8 @@ class YourTool(Tool):
 ### Basic Usage
 
 ```python
-from src.tools.deepseek_wrapper import DeepseekToolWrapper
-from src.tools.computer_tool import ComputerTool
+from src.infrastructure.llm.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.tools.computer_tool import ComputerTool
 
 # Initialize wrapper and tools
 wrapper = DeepseekToolWrapper()

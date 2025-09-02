@@ -55,7 +55,7 @@ from rich.theme import Theme
 from rich.box import ROUNDED
 from rich.live import Live
 
-from .console import make_console
+from .console import make_console, rebuild_console
 from .provider import select_provider, instantiate_wrapper
 from .handlers import (
     list_tools, show_config, show_help, show_models, select_model_interactive,
@@ -152,6 +152,11 @@ def run() -> None:
     for tool in tools:
         wrapper.register_tool(tool)
 
+    # Clear after provider selection before rendering main help
+    try:
+        console.clear()
+    except Exception:
+        pass
     show_help(console)
 
     completer = WordCompleter(
@@ -165,7 +170,7 @@ def run() -> None:
             with patch_stdout():
                 user_input = session.prompt("> ", completer=completer)
         except (KeyboardInterrupt, EOFError):
-            console.print("\n[warning]Exiting...[/warning]")
+            console.print("\nExiting...", style="yellow")
             break
 
         cmd = user_input.strip()
@@ -263,12 +268,13 @@ def run() -> None:
             continue
         if cmd == "/colors":
             use_color = handle_colors(console, settings_repo, use_color)
-            console = make_console(theme, use_color=use_color)
+            console = rebuild_console(enable=use_color)
             try:
                 console.clear()
             except Exception:
                 pass
-            console.print(Panel(f"Colors {'enabled' if use_color else 'disabled'}", title="Colors", box=ROUNDED))
+            # Re-render the main help/home panel to reflect color changes immediately
+            show_help(console)
             continue
         if cmd == "/clear":
             handle_clear(console)

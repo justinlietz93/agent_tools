@@ -39,7 +39,7 @@ def select_provider(console, session) -> str:
         choice = session.prompt("Choose [1-4]: ", completer=completer).strip()
         if choice in {"1", "2", "3", "4"}:
             return {"1": "deepseek", "2": "ollama", "3": "openai", "4": "custom"}[choice]
-        console.print("[warning]Invalid option. Enter 1, 2, 3, or 4.[/warning]")
+        console.print("Invalid option. Enter 1, 2, 3, or 4.", style="yellow")
 
 
 def input_custom_config(console, session) -> Tuple[str, str, str]:

@@ -5,10 +5,12 @@ from bs4 import BeautifulSoup
 from typing import Dict, Any, Optional
 from .tool_base import Tool, ToolResult
 
+# TODO Consider replacing this with "browser use" tool for more advanced interactions and a visual interface for the user to see the agent's actions.
+
 class WebBrowserTool(Tool):
     """
     Tool for fetching and parsing web page content.
-    Follows Anthropic Claude tool use standards.
+    
     """
 
     def __init__(self, user_agent: Optional[str] = None):

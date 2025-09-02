@@ -26,7 +26,7 @@ def build_illm(provider: str, model: str | None = None, base_url: str | None = N
         from src.infrastructure.llm.openai_compatible import OpenAICompatibleWrapper
         wrapper = OpenAICompatibleWrapper(api_key=api_key, base_url=base_url, model=model)
     elif provider == "deepseek":
-        from src.wrappers.deepseek_wrapper import DeepseekToolWrapper
+        from src.infrastructure.llm.deepseek_wrapper import DeepseekToolWrapper
         wrapper = DeepseekToolWrapper(api_key=api_key, base_url=base_url, model=model)
     elif provider == "custom":
         from src.infrastructure.llm.openai_compatible import OpenAICompatibleWrapper

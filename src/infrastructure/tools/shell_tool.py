@@ -7,7 +7,7 @@ from .tool_base import Tool
 class ShellTool(Tool):
     """
     Tool for executing shell commands safely.
-    Follows Anthropic Claude tool use standards.
+    
     """
 
     def __init__(self, allowed_commands: Optional[List[str]] = None):

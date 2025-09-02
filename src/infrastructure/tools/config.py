@@ -45,8 +45,9 @@ class Config:
     
     # Package manager settings
     PACKAGE_MANAGER_CONFIG = {
-        "use_module_pip": True,  # Default to python -m pip for better venv support
-        "pip_command": None,     # Custom pip command if needed
+        # Default to python -m pip for better venv support (tests now accept either form)
+        "use_module_pip": True,
+        "pip_command": None,
     }
     
     # Validation flags

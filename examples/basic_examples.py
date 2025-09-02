@@ -1,6 +1,6 @@
 """Basic examples of using Deepseek Reasoner."""
 
-from src.infrastructure.tools.deepseek_wrapper import DeepseekToolWrapper
+from src.infrastructure.llm.deepseek_wrapper import DeepseekToolWrapper
 from src.infrastructure.tools.computer_tool import ComputerTool
 import time
 

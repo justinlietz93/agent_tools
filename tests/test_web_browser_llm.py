@@ -42,7 +42,7 @@ def get_claude_response(system_prompt: str, user_message: str, tools: list) -> d
     ]
     
     response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=messages,
@@ -129,7 +129,7 @@ def test_basic_text_extraction_llm(web_browser):
     # Feed the result back to the LLM as part of the conversation
     client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
     final_response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=[
@@ -288,7 +288,7 @@ def test_link_following_llm(web_browser):
     # Now have the LLM analyze the links and choose the rate limits one
     client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
     second_response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=[
@@ -326,7 +326,7 @@ def test_link_following_llm(web_browser):
     
     # Have the LLM summarize what it found
     final_response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=[
@@ -397,7 +397,7 @@ def test_breadcrumb_navigation_llm(web_browser):
     # Have the LLM analyze the page structure
     client = Anthropic(api_key=config.ANTHROPIC_API_KEY)
     final_response = client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-20250514",
         max_tokens=1024,
         system=system_prompt,
         messages=[

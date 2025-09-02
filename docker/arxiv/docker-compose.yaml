@@ -1,0 +1,10 @@
+services:
+  arxiv-mcp:
+    image: mcp/arxiv-mcp-server:latest
+    volumes:
+      - ./research-papers:/app/papers
+    environment:
+      - ARXIV_STORAGE_PATH=/app/papers
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
